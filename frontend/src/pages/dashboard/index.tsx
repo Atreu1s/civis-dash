@@ -29,7 +29,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <Box sx={{ p: { xs: 2, md: 4 } }}>
+    <Box sx={{ p: { xs: 2, md: 10 } }}>
       <Typography variant="h4" sx={{ mb: 1, fontWeight: 700 }}>Обзор системы учёта граждан</Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>Агрегированные показатели реестра на текущий момент</Typography>
 
