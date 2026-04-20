@@ -43,7 +43,7 @@ export default function RegistryPage() {
   if (error) return <Typography color="error" sx={{ p: 4 }}>Ошибка загрузки данных</Typography>;
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: 10 }}>
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>Картотека граждан</Typography>
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
         <TextField 
