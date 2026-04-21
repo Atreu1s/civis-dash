@@ -160,6 +160,7 @@ export const handlers = [
       newThisMonth: 42,
       activeRecords: allCitizens.filter(c => c.status === 'активен').length,
       pendingVerification: allCitizens.filter(c => c.status === 'на проверке').length,
+      processedThisWeek: Math.floor(Math.random() * 50) + 80,
       ageDistribution: [
         { group: '18-25', count: 320 }, { group: '26-40', count: 510 },
         { group: '41-60', count: 480 }, { group: '60+', count: 190 }

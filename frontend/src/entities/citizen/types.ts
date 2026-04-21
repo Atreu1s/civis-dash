@@ -153,6 +153,7 @@ export interface DashboardStats {
   newThisMonth: number;
   activeRecords: number;
   pendingVerification: number;
+  processedThisWeek: number;
   ageDistribution: Array<{ group: string; count: number }>;
   regionDistribution: Array<{ region: string; count: number }>;
 }
