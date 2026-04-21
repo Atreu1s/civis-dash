@@ -3,7 +3,7 @@ export type MaritalStatus = 'single' | 'married' | 'divorced' | 'widowed';
 export type EducationLevel = 'secondary' | 'vocational' | 'bachelor' | 'master' | 'phd';
 export type DocumentType = 'passport' | 'snils' | 'inn' | 'driving_license' | 'military_id' | 'birth_certificate';
 export type FamilyRelation = 'spouse' | 'child' | 'parent' | 'sibling' | 'guardian';
-export type CitizenStatus = 'active' | 'archived' | 'pending_verification' | 'blocked';
+export type CitizenStatus = 'активен' | 'на проверке' | 'в архиве' | 'заблокирован';
 export type MilitaryCategory = 'fit' | 'limited' | 'exempt' | 'deferred' | 'not_served';
 export type VerificationLevel = 'basic' | 'advanced' | 'government';
 

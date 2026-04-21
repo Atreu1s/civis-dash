@@ -4,6 +4,7 @@ import { Search, Clear } from '@mui/icons-material';
 import CitizenTable from '../register/components/CitizenTable';
 import { useCitizens } from './hooks/useCitizen';
 import type { SortingState } from '@tanstack/react-table';
+import type { CitizenStatus } from '../../entities/citizen/types';
 
 const useDebounce = <T,>(value: T, delay: number): T => {
   const [debounced, setDebounced] = useState(value);
@@ -19,7 +20,7 @@ export default function RegistryPage() {
   const [limit] = useState(50);
   const [search, setSearch] = useState('');
   const [region, setRegion] = useState('');
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState<CitizenStatus | ''>('');
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const debouncedSearch = useDebounce(search, 300); 
@@ -43,7 +44,7 @@ export default function RegistryPage() {
   if (error) return <Typography color="error" sx={{ p: 4 }}>Ошибка загрузки данных</Typography>;
 
   return (
-    <Box sx={{ p: 10 }}>
+    <Box sx={{ pt: 6 }}>
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>Картотека граждан</Typography>
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap', alignItems: 'center' }}>
         <TextField 
@@ -77,12 +78,19 @@ export default function RegistryPage() {
           <MenuItem value="Казань">Казань</MenuItem>
           <MenuItem value="Новосибирск">Новосибирск</MenuItem>
         </TextField>
-        <TextField select label="Статус" size="small" value={status} onChange={(e) => { setStatus(e.target.value); setPage(0); }} sx={{ minWidth: 160 }}>
+        <TextField 
+          select 
+          label="Статус" 
+          size="small" 
+          value={status} 
+          onChange={(e) => { setStatus(e.target.value as CitizenStatus | ''); setPage(0); }} 
+          sx={{ minWidth: 160 }}
+        >
           <MenuItem value="">Все</MenuItem>
-          <MenuItem value="active">Активен</MenuItem>
-          <MenuItem value="pending_verification">На проверке</MenuItem>
-          <MenuItem value="archived">Архив</MenuItem>
-          <MenuItem value="blocked">Заблокирован</MenuItem>
+          <MenuItem value="активен">Активен</MenuItem>
+          <MenuItem value="на проверке">На проверке</MenuItem>
+          <MenuItem value="в архиве">Архив</MenuItem>
+          <MenuItem value="заблокирован">Заблокирован</MenuItem>
         </TextField>
         <Button variant="outlined" onClick={handleReset} startIcon={<Clear />}>Сбросить</Button>
       </Box>

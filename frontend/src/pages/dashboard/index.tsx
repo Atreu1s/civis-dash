@@ -22,14 +22,14 @@ export default function DashboardPage() {
   if (error) {
     return (
       <Box sx={{ p: 4, textAlign: 'center' }}>
-        <Typography variant="h6" color="error" sx={{ mb: 1 }}>⚠️ Не удалось загрузить статистику</Typography>
+        <Typography variant="h6" color="error" sx={{ mb: 4 }}>Не удалось загрузить статистику</Typography>
         <Typography variant="body2" color="text.secondary">Проверьте соединение или перезагрузите страницу</Typography>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ p: { xs: 2, md: 10 } }}>
+    <Box sx={{ pt: { xs: 8, md: 6 } }}>
       <Typography variant="h4" sx={{ mb: 1, fontWeight: 700 }}>Обзор системы учёта граждан</Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>Агрегированные показатели реестра на текущий момент</Typography>
 

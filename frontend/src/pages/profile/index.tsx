@@ -94,11 +94,11 @@ export default function ProfilePage() {
     setTimeout(() => { clearDraft(); navigate('/registry'); }, 1200);
   };
 
-  if (isLoading) return <Box sx={{ p: 4, textAlign: 'center' }}>Загрузка...</Box>;
-  if (error || !citizen) return <Box sx={{ p: 4 }}><Alert severity="error">Гражданин не найден</Alert></Box>;
+  if (isLoading) return <Box sx={{ pt: 10, textAlign: 'center' }}>Загрузка...</Box>;
+  if (error || !citizen) return <Box sx={{ pt: 10 }}><Alert severity="error">Гражданин не найден или не выбран</Alert></Box>;
 
   return (
-    <Box sx={{ p: { xs: 2, md: 10 }, bgcolor: 'background.default', minHeight: '100vh' }}>
+    <Box sx={{ pt: { xs: 2, md: 6}, bgcolor: 'background.default', minHeight: '100vh' }}>
       <Stack direction="row" sx={{ mb: 3, flexWrap: 'wrap', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>
         <Button startIcon={<ArrowBack />} onClick={() => navigate('/registry')}>
           Назад в картотеку

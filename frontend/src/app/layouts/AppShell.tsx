@@ -1,8 +1,7 @@
-// src/app/layouts/AppShell.tsx
 import { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
-  AppBar, Box, CssBaseline, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, useMediaQuery, useTheme
+  AppBar, Box, CssBaseline, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, useTheme
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -10,7 +9,9 @@ import {
   Person as PersonIcon,
   Menu as MenuIcon,
 } from '@mui/icons-material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
+const DRAWER_WIDTH = 260;
 const navItems = [
   { label: 'Dashboard', path: '/', icon: <DashboardIcon /> },
   { label: 'Картотека', path: '/registry', icon: <PeopleIcon /> },
@@ -25,80 +26,93 @@ export default function AppShell() {
   const location = useLocation();
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
-
-  const drawerContent = (
-    <Box sx={{ width: 260, height: '100%', pt: 2 }}>
-      <Typography variant="h5" sx={{ px: 3, mb: 4, fontWeight: 700, color: 'primary.main' }}>
-        Civis Dash
-      </Typography>
-      <List disablePadding>
-        {navItems.map((item) => (
-          <ListItem key={item.path} disablePadding sx={{ mb: 0.5, px: 1 }}>
+  const menuContent = (
+    <List disablePadding sx={{ px: 1, mt: 1 }}>
+      {navItems.map((item) => {
+        const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
+        return (
+          <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
             <ListItemButton
-              selected={location.pathname === item.path}
+              selected={isActive}
               onClick={() => {
                 navigate(item.path);
-                if (isMobile) handleDrawerToggle();
+                if (isMobile) setMobileOpen(false);
               }}
               sx={{
                 borderRadius: 2,
-                '&.Mui-selected': { bgcolor: 'primary.lighter', color: 'primary.main' },
+                '&.Mui-selected': { bgcolor: 'primary.light', color: 'primary.contrastText', '&:hover': { bgcolor: 'primary.main' } },
                 '&:hover': { bgcolor: 'action.hover' },
               }}
             >
-              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontWeight: 500 } } }} />
+              <ListItemIcon sx={{ color: isActive ? 'inherit' : 'text.secondary', minWidth: 40 }}>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontWeight: isActive ? 600 : 500 } } }} />
             </ListItemButton>
           </ListItem>
-        ))}
-      </List>
-    </Box>
+        );
+      })}
+    </List>
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1, bgcolor: 'background.paper', boxShadow: 1 }}>
+      <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1, boxShadow: 1 }}>
         <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={handleDrawerToggle} sx={{ mr: 2 }}>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { md: 'none' } }} 
+          >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'text.primary' }}>
-            Панель управления
+          <Typography variant="h6" noWrap component="div" sx={{ color: 'white' }}>
+            Civis Dash
           </Typography>
         </Toolbar>
       </AppBar>
       <Drawer
-        variant={isMobile ? 'temporary' : 'persistent'}
-        open={isMobile ? mobileOpen : true}
+        variant="temporary"
+        open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
         sx={{
-          width: 260,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': { 
-            width: 260, 
-            boxSizing: 'border-box', 
-            borderRight: '1px solid', 
-            borderColor: 'divider' 
-          },
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH },
+          bgcolor: 'primary.main',
         }}
       >
-        <Toolbar /> 
-        {drawerContent}
+        <Toolbar />
+        <Typography variant="h6" sx={{ px: 3, mb: 1, fontWeight: 700, color: 'white' }}>Civis Dash</Typography>
+        {menuContent}
       </Drawer>
-
+      <Drawer
+        variant="persistent"
+        open={true}
+        sx={{
+          display: { xs: 'none', md: 'block' },
+          width: DRAWER_WIDTH,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': { width: DRAWER_WIDTH, boxSizing: 'border-box', borderRight: '1px solid', borderColor: 'divider' },
+        }}
+      >
+        <Toolbar />
+        
+        {menuContent}
+      </Drawer>
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: { xs: 2, md: 4 },
-          pt: 8, 
-          bgcolor: 'background.default',
+          width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
           minHeight: '100vh',
+          bgcolor: 'background.default',
         }}
       >
-        <Outlet /> 
+        <Toolbar /> 
+        <Outlet />
       </Box>
     </Box>
   );

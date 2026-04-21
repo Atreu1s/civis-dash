@@ -7,7 +7,8 @@ import {
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography
 } from '@mui/material';
-import type { Citizen } from '../../../entities/citizen/types';
+import { StatusChip } from './StatusStyle';
+import type { Citizen, CitizenStatus } from '../../../entities/citizen/types';
 
 interface CitizenTableProps {
   data: Citizen[];
@@ -19,7 +20,13 @@ const columns: ColumnDef<Citizen>[] = [
   { id: 'fullName', header: 'ФИО', cell: ({ row }) => `${row.original.lastName} ${row.original.firstName} ${row.original.patronymic || ''}`.trim() },
   { accessorKey: 'birthDate', header: 'Дата рождения', cell: ({ getValue }) => new Date(getValue<string>()).toLocaleDateString('ru-RU') },
   { accessorKey: 'registrationAddress.region', header: 'Регион' },
-  { accessorKey: 'status', header: 'Статус', cell: ({ getValue }) => <span style={{ padding: '2px 8px', borderRadius: 4, background: 'rgba(0,0,0,0.06)', fontSize: 12 }}>{getValue<string>()}</span> },
+  { accessorKey: 'status', 
+    header: 'Статус', 
+    cell: ({ row }) => {
+      const status = row.original.status as CitizenStatus;
+      return <StatusChip status={status} size="small" />;
+    }
+  },
   { accessorKey: 'snils', header: 'СНИЛС' },
 ];
 

@@ -1,10 +1,8 @@
-// src/mocks/handlers.ts
 import { http, HttpResponse } from 'msw';
 import type { Citizen, PaginatedResponse, CitizenStatus, Gender, MaritalStatus, MilitaryCategory, VerificationLevel } from '../entities/citizen/types';
 
-// Вспомогательные массивы для генерации
 const REGIONS = ['Москва', 'Санкт-Петербург', 'Московская область', 'Казань', 'Новосибирск'] as const;
-const STATUSES: CitizenStatus[] = ['active', 'pending_verification', 'archived', 'blocked'];
+const STATUSES: CitizenStatus[] = ['активен', 'на проверке', 'в архиве', 'заблокирован'];
 const GENDERS: Gender[] = ['male', 'female', 'other'];
 const MARITAL_STATUSES: MaritalStatus[] = ['single', 'married', 'divorced', 'widowed'];
 const MIL_CATEGORIES: MilitaryCategory[] = ['fit', 'limited', 'exempt', 'deferred', 'not_served'];
@@ -18,14 +16,13 @@ const generateMockCitizens = (count: number): Citizen[] => {
     const status = STATUSES[i % STATUSES.length];
     
     return {
-      // === Базовые поля ===
       id: `cit-${i + 1}`,
       lastName: `Фамилия${i + 1}`,
       firstName: `Имя${i + 1}`,
       patronymic: i % 3 === 0 ? `Отчество${i + 1}` : '',
       gender: GENDERS[i % GENDERS.length],
       birthDate: new Date(1970 + Math.floor(Math.random() * 40), Math.floor(Math.random() * 12), 1 + Math.floor(Math.random() * 28)).toISOString().split('T')[0],
-      birthPlace: `Город ${region}`, // ✅ Обязательное поле из Citizen
+      birthPlace: `Город ${region}`, 
       maritalStatus: MARITAL_STATUSES[i % MARITAL_STATUSES.length],
       citizenship: 'Российская Федерация',
       nationality: '',
@@ -35,12 +32,10 @@ const generateMockCitizens = (count: number): Citizen[] => {
       emergencyContactName: `Контакт ${i}`,
       emergencyContactPhone: `+7 (900) ${2000000 + i}`,
       
-      // === Документы ===
       snils: `${String(100 + i % 1000).padStart(3, '0')}-${String(100 + i % 1000).padStart(3, '0')}-${String(100 + i % 1000).padStart(3, '0')} ${String(i % 100).padStart(2, '0')}`,
       inn: `${100000000000 + i}`,
       documents: [],
       
-      // === Адреса ===
       registrationAddress: { 
         region, 
         city: 'Город', 
@@ -62,17 +57,14 @@ const generateMockCitizens = (count: number): Citizen[] => {
         isRegistered: false 
       },
       
-      // === Семья ===
       familyMembers: [],
       hasChildren: i % 2 === 0,
       childrenCount: i % 4,
       isLargeFamily: i % 7 === 0,
       
-      // === Образование и работа ===
       educationHistory: [],
       employmentHistory: [],
       
-      // === Медицина ===
       medical: { 
         bloodGroup: 'I+', 
         allergies: [], 
@@ -82,7 +74,6 @@ const generateMockCitizens = (count: number): Citizen[] => {
         lastCheckupDate: null 
       },
       
-      // === Соц. статус ===
       isVeteran: false,
       isPensioner: false,
       pensionType: null,
@@ -90,7 +81,6 @@ const generateMockCitizens = (count: number): Citizen[] => {
       housingCondition: HOUSING_CONDITIONS[i % HOUSING_CONDITIONS.length],
       subsidyEligible: false,
       
-      // === Военный учёт ===
       militaryCategory: MIL_CATEGORIES[i % MIL_CATEGORIES.length],
       militaryUnit: null,
       rank: null,
@@ -98,7 +88,6 @@ const generateMockCitizens = (count: number): Citizen[] => {
       conscriptionRegion: region,
       mobilizationStatus: 'civilian',
       
-      // === Финансы ===
       financial: { 
         taxNumber: `${i}`, 
         bankAccountMasked: '**** 1234', 
@@ -108,7 +97,6 @@ const generateMockCitizens = (count: number): Citizen[] => {
         incomeSource: INCOME_SOURCES[i % INCOME_SOURCES.length] 
       },
       
-      // === Системные поля ===
       system: { 
         assignedOperator: 'Оператор', 
         department: 'Отдел 1', 
@@ -124,10 +112,10 @@ const generateMockCitizens = (count: number): Citizen[] => {
       // === Метаданные ===
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      status, // ✅ CitizenStatus из типов
+      status, 
       lastLogin: null,
       profileCompletionPercent: 100,
-    } satisfies Citizen; // ✅ Гарантия соответствия интерфейсу
+    } satisfies Citizen; 
   });
 };
 
@@ -157,9 +145,8 @@ export const handlers = [
     const start = (page - 1) * limit;
     const paginatedData = filtered.slice(start, start + limit);
 
-    // ✅ КЛЮЧЕВОЕ: ключ `data` (не paginatedData!) — соответствует PaginatedResponse<T>
     return HttpResponse.json<PaginatedResponse<Citizen>>({
-      data: paginatedData, // ← БЫЛО ОШИБКОЙ
+      data: paginatedData, 
       total,
       page,
       limit,
@@ -171,8 +158,8 @@ export const handlers = [
     return HttpResponse.json({
       totalCitizens: allCitizens.length,
       newThisMonth: 42,
-      activeRecords: allCitizens.filter(c => c.status === 'active').length,
-      pendingVerification: allCitizens.filter(c => c.status === 'pending_verification').length,
+      activeRecords: allCitizens.filter(c => c.status === 'активен').length,
+      pendingVerification: allCitizens.filter(c => c.status === 'на проверке').length,
       ageDistribution: [
         { group: '18-25', count: 320 }, { group: '26-40', count: 510 },
         { group: '41-60', count: 480 }, { group: '60+', count: 190 }
