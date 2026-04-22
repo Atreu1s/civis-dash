@@ -8,30 +8,46 @@ import {
   People as PeopleIcon,
   Person as PersonIcon,
   Menu as MenuIcon,
+  Brightness4 as Brightness4Icon,
+  Brightness7 as Brightness7Icon,
 } from '@mui/icons-material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+// ✅ Импортируем хук из контекста
+import { useThemeMode } from '../../context/ThemeContext';
 
 const DRAWER_WIDTH = 260;
 const navItems = [
-  { label: 'Dashboard', path: '/', icon: <DashboardIcon /> },
-  { label: 'Картотека', path: '/registry', icon: <PeopleIcon /> },
+  { label: 'Статистика', path: '/', icon: <DashboardIcon /> },
+  { label: 'Граждане', path: '/registry', icon: <PeopleIcon /> },
   { label: 'Профиль', path: '/profile/demo', icon: <PersonIcon /> },
 ];
 
 export default function AppShell() {
-  const theme = useTheme();
+  const theme = useTheme(); // MUI theme для брейкпоинтов
+  // ✅ Получаем darkMode и toggleDarkMode из контекста (НЕ создаём свой useState!)
+  const { darkMode, toggleDarkMode } = useThemeMode();
+  
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+
+  const drawerPaperSx = {
+    boxSizing: 'border-box',
+    width: DRAWER_WIDTH,
+    bgcolor: { xs: 'rgba(25, 118, 210, 1)', md: 'rgba(25, 118, 210, 0.2)' },
+    borderRight: '1px solid',
+    borderColor: 'rgba(25, 118, 210, 0.5)',
+  };
+
   const menuContent = (
-    <List disablePadding sx={{ px: 1, mt: 1 }}>
+    <List disablePadding sx={{ mt: 1 }}>
       {navItems.map((item) => {
         const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
         return (
-          <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
+          <ListItem key={item.path} disablePadding sx={{ mb: 0.5, px: 0 }}>
             <ListItemButton
               selected={isActive}
               onClick={() => {
@@ -39,13 +55,29 @@ export default function AppShell() {
                 if (isMobile) setMobileOpen(false);
               }}
               sx={{
-                borderRadius: 2,
-                '&.Mui-selected': { bgcolor: 'primary.light', color: 'primary.contrastText', '&:hover': { bgcolor: 'primary.main' } },
-                '&:hover': { bgcolor: 'action.hover' },
+                color: { xs: '#ffffff', md: darkMode ? '#e2e8f0' : '#172b4d' },
+                borderRadius: isActive ? 0 : 2,
+                py: 1.5,
+                '&.Mui-selected': {
+                  bgcolor: { xs: 'rgba(255, 255, 255, 0.4)', md: 'primary.main' },
+                  color: '#ffffff',
+                  borderRadius: 0,
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                  '& .MuiListItemIcon-root': { color: '#ffffff' },
+                  '&:hover': { bgcolor: { xs: 'rgba(255, 255, 255, 0.6)', md: 'primary.dark' } }
+                },
+                '&:hover:not(.Mui-selected)': {
+                  bgcolor: 'rgba(25, 118, 210, 0.08)'
+                }
               }}
             >
-              <ListItemIcon sx={{ color: isActive ? 'inherit' : 'text.secondary', minWidth: 40 }}>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.label} slotProps={{ primary: { sx: { fontWeight: isActive ? 600 : 500 } } }} />
+              <ListItemIcon sx={{ color: { xs: '#ffffff', md: darkMode ? '#e2e8f0' : '#172b4d' }, minWidth: 40 }}>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText 
+                primary={item.label} 
+                slotProps={{ primary: { sx: { fontWeight: isActive ? 700 : 500, color: 'inherit' } } }} 
+              />
             </ListItemButton>
           </ListItem>
         );
@@ -56,22 +88,27 @@ export default function AppShell() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1, boxShadow: 1 }}>
+      <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1, boxShadow: 1, bgcolor: 'primary.main' }}>
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { md: 'none' } }} 
-          >
+          <IconButton color="inherit" aria-label="open drawer" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2, display: { md: 'none' } }}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ color: 'white' }}>
+          <Typography variant="h6" noWrap component="div" sx={{ color: 'white', flexGrow: 1 }}>
             Civis Dash
           </Typography>
+          
+          {/* ✅ Кнопка использует toggleDarkMode из контекста */}
+          <IconButton 
+            color="inherit" 
+            onClick={toggleDarkMode}
+            sx={{ ml: 1 }}
+            aria-label="Переключить тему"
+          >
+            {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
         </Toolbar>
       </AppBar>
+      
       <Drawer
         variant="temporary"
         open={mobileOpen}
@@ -79,14 +116,13 @@ export default function AppShell() {
         ModalProps={{ keepMounted: true }}
         sx={{
           display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH },
-          bgcolor: 'primary.main',
+          '& .MuiDrawer-paper': drawerPaperSx,
         }}
       >
         <Toolbar />
-        <Typography variant="h6" sx={{ px: 3, mb: 1, fontWeight: 700, color: 'white' }}>Civis Dash</Typography>
         {menuContent}
       </Drawer>
+      
       <Drawer
         variant="persistent"
         open={true}
@@ -94,13 +130,13 @@ export default function AppShell() {
           display: { xs: 'none', md: 'block' },
           width: DRAWER_WIDTH,
           flexShrink: 0,
-          '& .MuiDrawer-paper': { width: DRAWER_WIDTH, boxSizing: 'border-box', borderRight: '1px solid', borderColor: 'divider' },
+          '& .MuiDrawer-paper': drawerPaperSx,
         }}
       >
         <Toolbar />
-        
         {menuContent}
       </Drawer>
+      
       <Box
         component="main"
         sx={{
@@ -111,7 +147,7 @@ export default function AppShell() {
           bgcolor: 'background.default',
         }}
       >
-        <Toolbar /> 
+        <Toolbar />
         <Outlet />
       </Box>
     </Box>

@@ -1,4 +1,3 @@
-// src/pages/register/components/StatusStyle.tsx
 import { Chip } from '@mui/material';
 import type { ComponentPropsWithoutRef } from 'react';
 import { getStatusConfig } from '../../../utils/statusStyle';
@@ -9,23 +8,30 @@ interface StatusChipProps extends Omit<ComponentPropsWithoutRef<typeof Chip>, 'c
   size?: 'small' | 'medium';
 }
 
-export function StatusChip({ status, size = 'small', ...props }: StatusChipProps) {
+export function StatusChip({ status }: StatusChipProps) {
   const config = getStatusConfig(status);
-
-  const sx = {
-    color: 'white',
-    fontWeight: 500,
-    ...(config.color === 'default' && { color: 'text.primary' }),
-  };
 
   return (
     <Chip
       label={config.label}
-      color={config.color}
-      variant="filled" 
-      size={size}
-      sx={sx}
-      {...props}
+      variant="filled"
+      sx={{
+        bgcolor: config.bg,
+        color: config.color,
+        fontWeight: 600,
+        fontSize: '0.75rem',
+        minWidth: '110px',
+        height: '28px',           
+        borderRadius: '6px',      
+        border: '1px solid',
+        borderColor: `${config.color}30`, 
+        transition: 'all 0.2s ease-in-out',
+        '&:hover': { 
+          bgcolor: `${config.bg}cc`, 
+          transform: 'translateY(-1px)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)'
+        }
+      }}
     />
   );
 }

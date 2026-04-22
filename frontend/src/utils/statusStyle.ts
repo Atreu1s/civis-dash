@@ -1,39 +1,28 @@
 import type { CitizenStatus } from '../entities/citizen/types';
 
-export type StatusIconName = 'check' | 'pending' | 'block' | 'archive' | undefined;
-
 export const STATUS_CONFIG: Record<
   CitizenStatus,
-  {
-    label: string;
-    color: 'success' | 'warning' | 'error' | 'default';
-    variant: 'filled' | 'outlined' | 'soft';
-    icon?: StatusIconName;
-  }
+  { label: string; color: string; bg: string }
 > = {
-  'активен': {
-    label: 'Активен',
-    color: 'success',
-    variant: 'soft', 
-    icon: 'check',
+  'активен': { 
+    label: 'Активен', 
+    color: '#1e88e5',          
+    bg: 'rgba(30, 136, 229, 0.12)',   
   },
-  'на проверке': {
-    label: 'На проверке',
-    color: 'warning',
-    variant: 'outlined',
-    icon: 'pending',
+  'на проверке': { 
+    label: 'На проверке', 
+    color: '#9e6900',          
+    bg: 'rgba(255, 229, 127, 0.18)', 
   },
-  'заблокирован': {
-    label: 'Заблокирован',
-    color: 'error',
-    variant: 'filled',
-    icon: 'block',
+  'заблокирован': { 
+    label: 'Заблокирован', 
+    color: '#d32f2f',          
+    bg: 'rgba(244, 67, 54, 0.12)',   
   },
-  'в архиве': {
-    label: 'В архиве',
-    color: 'default',
-    variant: 'outlined',
-    icon: 'archive',
+  'в архиве': { 
+    label: 'В архиве', 
+    color: '#616161',          
+    bg: 'rgba(117, 117, 117, 0.12)',   
   },
 };
 

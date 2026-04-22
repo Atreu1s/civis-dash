@@ -32,10 +32,14 @@ export default function DashboardPage() {
     <Box sx={{ pt: { xs: 8, md: 6 } }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, flexWrap: 'wrap', gap: 2 }}>
         <Box>
-          <Typography variant="h4" sx={{ fontWeight: 700 }}>Обзор системы учёта граждан</Typography>
+          <Typography variant="h4" sx={{ fontWeight: 700 }}>Статистика по учёту граждан</Typography>
           <Typography variant="body2" color="text.secondary">Агрегированные показатели реестра на текущий момент</Typography>
         </Box>
-        <Chip label="Период: 30 дней" size="small" variant="outlined" />
+        <Chip sx={{
+          bgcolor: 'rgba(25, 118, 210, 0.1)', 
+          border: '1px solid', 
+          borderColor: 'primary.main',
+        }} label="Период: 30 дней" size="small" variant="outlined" />
       </Box>
 
       <Grid container spacing={3} sx={{ mb: 4 }}>
