@@ -109,7 +109,6 @@ const generateMockCitizens = (count: number): Citizen[] => {
         auditHistory: [] 
       },
       
-      // === Метаданные ===
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       status, 
@@ -120,6 +119,49 @@ const generateMockCitizens = (count: number): Citizen[] => {
 };
 
 const allCitizens = generateMockCitizens(1500);
+
+const generateMonthlyStats = () => {
+  const months = [];
+  const now = new Date();
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthKey = date.toISOString().slice(0, 10); 
+    
+    const baseRegistrations = 100 + i * 5;
+    const baseVerifications = Math.floor(baseRegistrations * 0.7);
+    
+    months.push({
+      month: monthKey,
+      registrations: baseRegistrations + Math.floor(Math.random() * 30),
+      verifications: baseVerifications + Math.floor(Math.random() * 20)
+    });
+  }
+  return months;
+};
+
+const generateStatusDistribution = () => {
+  const distribution: Array<{ status: CitizenStatus; count: number }> = [];
+  
+  (['активен', 'на проверке', 'в архиве', 'заблокирован'] as CitizenStatus[]).forEach(status => {
+    const count = allCitizens.filter(c => c.status === status).length;
+    if (count > 0) {
+      distribution.push({ status, count });
+    }
+  });
+  
+  return distribution;
+};
+
+const generateRegionActivity = () => {
+  return REGIONS.map(region => {
+    const regionCitizens = allCitizens.filter(c => c.registrationAddress.region === region);
+    return {
+      region,
+      activeCount: regionCitizens.filter(c => c.status === 'активен').length,
+      pendingCount: regionCitizens.filter(c => c.status === 'на проверке').length
+    };
+  }).sort((a, b) => b.activeCount - a.activeCount); 
+};
 
 export const handlers = [
   http.get('/api/citizens', ({ request }) => {
@@ -162,14 +204,22 @@ export const handlers = [
       pendingVerification: allCitizens.filter(c => c.status === 'на проверке').length,
       processedThisWeek: Math.floor(Math.random() * 50) + 80,
       ageDistribution: [
-        { group: '18-25', count: 320 }, { group: '26-40', count: 510 },
-        { group: '41-60', count: 480 }, { group: '60+', count: 190 }
+        { group: '18-25', count: 320 }, 
+        { group: '26-40', count: 510 },
+        { group: '41-60', count: 480 }, 
+        { group: '60+', count: 190 }
       ],
       regionDistribution: [
-        { region: 'Москва', count: 450 }, { region: 'Санкт-Петербург', count: 310 },
-        { region: 'Московская область', count: 280 }, { region: 'Казань', count: 190 },
+        { region: 'Москва', count: 450 }, 
+        { region: 'Санкт-Петербург', count: 310 },
+        { region: 'Московская область', count: 280 }, 
+        { region: 'Казань', count: 190 },
         { region: 'Новосибирск', count: 140 }
       ],
+
+      monthlyRegistrations: generateMonthlyStats(),
+      statusDistribution: generateStatusDistribution(),
+      regionActivity: generateRegionActivity()
     });
   }),
 

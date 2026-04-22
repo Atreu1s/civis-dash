@@ -12,7 +12,6 @@ import {
   Brightness7 as Brightness7Icon,
 } from '@mui/icons-material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-// ✅ Импортируем хук из контекста
 import { useThemeMode } from '../../context/ThemeContext';
 
 const DRAWER_WIDTH = 260;
@@ -23,10 +22,8 @@ const navItems = [
 ];
 
 export default function AppShell() {
-  const theme = useTheme(); // MUI theme для брейкпоинтов
-  // ✅ Получаем darkMode и toggleDarkMode из контекста (НЕ создаём свой useState!)
+  const theme = useTheme();
   const { darkMode, toggleDarkMode } = useThemeMode();
-  
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
@@ -37,9 +34,12 @@ export default function AppShell() {
   const drawerPaperSx = {
     boxSizing: 'border-box',
     width: DRAWER_WIDTH,
-    bgcolor: { xs: 'rgba(25, 118, 210, 1)', md: 'rgba(25, 118, 210, 0.2)' },
+    bgcolor: { 
+      xs: theme.palette.primary.main, 
+      md: darkMode ? 'rgba(30, 41, 59, 0.7)' : 'rgba(25, 118, 210, 0.1)' 
+    },
     borderRight: '1px solid',
-    borderColor: 'rgba(25, 118, 210, 0.5)',
+    borderColor: darkMode ? 'rgba(59, 130, 246, 0.3)' : 'rgba(25, 118, 210, 0.5)',
   };
 
   const menuContent = (
@@ -55,23 +55,44 @@ export default function AppShell() {
                 if (isMobile) setMobileOpen(false);
               }}
               sx={{
-                color: { xs: '#ffffff', md: darkMode ? '#e2e8f0' : '#172b4d' },
+                color: { 
+                  xs: '#ffffff', 
+                  md: darkMode ? theme.palette.text.primary : '#172b4d' 
+                },
                 borderRadius: isActive ? 0 : 2,
                 py: 1.5,
                 '&.Mui-selected': {
-                  bgcolor: { xs: 'rgba(255, 255, 255, 0.4)', md: 'primary.main' },
-                  color: '#ffffff',
+                  bgcolor: { 
+                    xs: 'rgba(255, 255, 255, 0.4)', 
+                    md: darkMode ? 'rgba(59, 130, 246, 0.2)' : theme.palette.primary.main 
+                  },
+                  color: { xs: '#ffffff', md: theme.palette.primary.contrastText },
                   borderRadius: 0,
                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                  '& .MuiListItemIcon-root': { color: '#ffffff' },
-                  '&:hover': { bgcolor: { xs: 'rgba(255, 255, 255, 0.6)', md: 'primary.dark' } }
+                  '& .MuiListItemIcon-root': { 
+                    color: { xs: '#ffffff', md: theme.palette.primary.contrastText } 
+                  },
+                  '&:hover': { 
+                    bgcolor: { 
+                      xs: 'rgba(255, 255, 255, 0.6)', 
+                      md: darkMode ? 'rgba(59, 130, 246, 0.3)' : theme.palette.primary.dark 
+                    } 
+                  }
                 },
                 '&:hover:not(.Mui-selected)': {
-                  bgcolor: 'rgba(25, 118, 210, 0.08)'
+                  bgcolor: darkMode ? 'rgba(59, 130, 246, 0.1)' : 'rgba(25, 118, 210, 0.08)'
                 }
               }}
             >
-              <ListItemIcon sx={{ color: { xs: '#ffffff', md: darkMode ? '#e2e8f0' : '#172b4d' }, minWidth: 40 }}>
+              <ListItemIcon sx={{ 
+                color: { 
+                  xs: '#ffffff', 
+                  md: isActive 
+                    ? (darkMode ? theme.palette.primary.contrastText : '#ffffff') 
+                    : (darkMode ? theme.palette.text.primary : '#172b4d') 
+                }, 
+                minWidth: 40 
+              }}>
                 {item.icon}
               </ListItemIcon>
               <ListItemText 
@@ -88,20 +109,42 @@ export default function AppShell() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1, boxShadow: 1, bgcolor: 'primary.main' }}>
+      
+      <AppBar 
+        position="fixed" 
+        sx={{ 
+          zIndex: theme.zIndex.drawer + 1, 
+          boxShadow: 1, 
+          bgcolor: darkMode ? '#0f172a' : theme.palette.primary.main,
+          borderBottom: darkMode ? '1px solid rgba(255,255,255,0.1)' : 'none',
+        }} 
+      >
         <Toolbar>
-          <IconButton color="inherit" aria-label="open drawer" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2, display: { md: 'none' } }}>
+          <IconButton 
+            color="inherit" 
+            aria-label="open drawer" 
+            edge="start" 
+            onClick={handleDrawerToggle} 
+            sx={{ mr: 2, display: { md: 'none' } }} 
+          >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ color: 'white', flexGrow: 1 }}>
+          <Typography variant="h6" noWrap component="div" sx={{ 
+            color: darkMode ? '#f1f5f9' : '#ffffff', 
+            flexGrow: 1,
+            fontWeight: 600 
+          }}>
             Civis Dash
           </Typography>
           
-          {/* ✅ Кнопка использует toggleDarkMode из контекста */}
           <IconButton 
             color="inherit" 
             onClick={toggleDarkMode}
-            sx={{ ml: 1 }}
+            sx={{ 
+              ml: 1,
+              color: darkMode ? '#f1f5f9' : '#ffffff',
+              '&:hover': { bgcolor: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.2)' }
+            }}
             aria-label="Переключить тему"
           >
             {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
@@ -120,6 +163,14 @@ export default function AppShell() {
         }}
       >
         <Toolbar />
+        <Typography variant="h6" sx={{ 
+          px: 3, 
+          mb: 1, 
+          fontWeight: 700, 
+          color: { xs: '#ffffff', md: darkMode ? '#f1f5f9' : '#172b4d' } 
+        }}>
+          Civis Dash
+        </Typography>
         {menuContent}
       </Drawer>
       

@@ -6,13 +6,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button, Box, Typography, Paper, Grid, TextField, MenuItem,
   Alert, Snackbar, IconButton, Divider, Switch, FormControlLabel,
-  Stack, Chip
+  Stack, Chip, useTheme
 } from '@mui/material';
 import { ArrowBack, Save, Cancel, Person, Home, School, AccountBalance, Add, Remove } from '@mui/icons-material';
 import { useCitizenById } from './hooks/useCitizenById';
 import { useProfileDraft } from './store/userStore';
 import { profileSchema, type ProfileFormData } from './schemas/profileSchema';
 import type { Citizen } from '../../entities/citizen/types';
+
 const sections = [
   { id: 'personal', title: 'Личные данные', icon: <Person /> },
   { id: 'addresses', title: 'Адреса', icon: <Home /> },
@@ -30,9 +31,8 @@ const defaultValues: DefaultValues<ProfileFormData> = {
   system: { preferredLanguage: 'ru', communicationChannel: 'email' },
 };
 
-const dateFieldSlotProps = { inputLabel: { shrink: true } } as const;
-
 export default function ProfilePage() {
+  const theme = useTheme();
   const { id } = useParams();
   const navigate = useNavigate();
   
@@ -51,6 +51,21 @@ export default function ProfilePage() {
 
   const { fields: familyFields, append: appendFamily, remove: removeFamily } = useFieldArray({ control, name: 'familyMembers' });
   const { fields: eduFields, append: appendEdu, remove: removeEdu } = useFieldArray({ control, name: 'educationHistory' });
+
+  // ✅ Адаптивные пропсы для нативного date-инпута (инверсия иконки в тёмной теме)
+  const dateFieldSlotProps = {
+    inputLabel: { shrink: true },
+    htmlInput: {
+      sx: {
+        '&::-webkit-calendar-picker-indicator': {
+          filter: theme.palette.mode === 'dark' ? 'invert(1)' : 'none',
+          opacity: 0.8,
+          cursor: 'pointer'
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     if (citizen && isInitializing.current) {
       const src = draft || citizen;
@@ -72,6 +87,7 @@ export default function ProfilePage() {
       isInitializing.current = false;
     }
   }, [citizen, reset, draft]);
+
   useEffect(() => {
     if (isInitializing.current) return;
     const subscription = watch((value) => {
@@ -79,6 +95,7 @@ export default function ProfilePage() {
     });
     return () => subscription.unsubscribe();
   }, [watch, setDraft]);
+
   const scrollToSection = (id: string) => {
     const el = sectionRefs.current[id];
     if (el) {
@@ -88,22 +105,23 @@ export default function ProfilePage() {
       setTimeout(() => { el.style.backgroundColor = 'transparent'; }, 1500);
     }
   };
+
   const onSubmit: SubmitHandler<ProfileFormData> = async (data) => {
     setDraft(data as unknown as Partial<Citizen>);
     setSnack({ open: true, message: 'Профиль сохранён', severity: 'success' });
     setTimeout(() => { clearDraft(); navigate('/registry'); }, 1200);
   };
 
-  if (isLoading) return <Box sx={{ pt: 10, textAlign: 'center' }}>Загрузка...</Box>;
+  if (isLoading) return <Box sx={{ pt: 10, textAlign: 'center', color: 'text.secondary' }}>Загрузка...</Box>;
   if (error || !citizen) return <Box sx={{ pt: 10 }}><Alert severity="error">Гражданин не найден или не выбран</Alert></Box>;
 
   return (
-    <Box sx={{ pt: { xs: 2, md: 6}, bgcolor: 'background.default', minHeight: '100vh' }}>
+    <Box sx={{ pt: { xs: 2, md: 6 }, bgcolor: 'background.default', minHeight: '100vh' }}>
       <Stack direction="row" sx={{ mb: 3, flexWrap: 'wrap', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>
-        <Button startIcon={<ArrowBack />} onClick={() => navigate('/registry')}>
+        <Button startIcon={<ArrowBack />} onClick={() => navigate('/registry')} variant="outlined">
           Назад в картотеку
         </Button>
-        <Stack direction="row" spacing={1}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
           {sections.map(sec => (
             <Chip
               key={sec.id}
@@ -114,37 +132,35 @@ export default function ProfilePage() {
               variant="outlined"
             />
           ))}
-        </Stack>
+        </Box>
       </Stack>
       
-      <Paper sx={{ p: { xs: 2, md: 4 }, borderRadius: 3, boxShadow: 2 }}>
-        <Typography variant="h5" sx={{ mb: 4, fontWeight: 700 }}>Редактирование профиля</Typography>
+      <Paper sx={{ p: { xs: 2, md: 4 }, borderRadius: 3, boxShadow: 3, bgcolor: 'background.paper' }}>
+        <Typography variant="h5" sx={{ mb: 4, fontWeight: 700, color: 'text.primary' }}>Редактирование профиля</Typography>
         
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          {/* 📍 Основные */}
           <Box 
             ref={(el: HTMLDivElement | null) => { sectionRefs.current['personal'] = el; }} 
             sx={{ mb: 5, pb: 3, borderBottom: '1px solid', borderColor: 'divider' }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1, mb: 3 }}>
-              <Home color="primary" />
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>Основные</Typography>
+              <Person color="primary" />
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>Основные</Typography>
             </Box>
             <Grid container spacing={3}>
               <Grid size={{ xs: 12, sm: 4 }}>
-                <TextField fullWidth label="Фамилия *" {...control.register('lastName')} 
-                  error={!!errors.lastName} helperText={errors.lastName?.message} />
+                <TextField fullWidth label="Фамилия *" {...control.register('lastName')} error={!!errors.lastName} helperText={errors.lastName?.message} />
               </Grid>
               <Grid size={{ xs: 12, sm: 4 }}>
-                <TextField fullWidth label="Имя *" {...control.register('firstName')} 
-                  error={!!errors.firstName} helperText={errors.firstName?.message} />
+                <TextField fullWidth label="Имя *" {...control.register('firstName')} error={!!errors.firstName} helperText={errors.firstName?.message} />
               </Grid>
               <Grid size={{ xs: 12, sm: 4 }}>
                 <TextField fullWidth label="Отчество" {...control.register('patronymic')} />
               </Grid>
               <Grid size={{ xs: 12, sm: 4 }}>
                 <Controller name="birthDate" control={control} render={({ field }) => (
-                  <TextField fullWidth type="date" label="Дата рождения *" {...field} 
-                    slotProps={dateFieldSlotProps} error={!!errors.birthDate} helperText={errors.birthDate?.message} />
+                  <TextField fullWidth type="date" label="Дата рождения *" {...field} slotProps={dateFieldSlotProps} error={!!errors.birthDate} helperText={errors.birthDate?.message} />
                 )} />
               </Grid>
               <Grid size={{ xs: 12, sm: 4 }}>
@@ -157,30 +173,30 @@ export default function ProfilePage() {
                 )} />
               </Grid>
               <Grid size={{ xs: 12, sm: 4 }}>
-                <TextField fullWidth label="Телефон *" {...control.register('phonePrimary')} 
-                  error={!!errors.phonePrimary} helperText={errors.phonePrimary?.message} />
+                <TextField fullWidth label="Телефон *" {...control.register('phonePrimary')} error={!!errors.phonePrimary} helperText={errors.phonePrimary?.message} />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField fullWidth label="Email" {...control.register('email')} 
-                  error={!!errors.email} helperText={errors.email?.message} />
+                <TextField fullWidth label="Email" {...control.register('email')} error={!!errors.email} helperText={errors.email?.message} />
               </Grid>
             </Grid>
           </Box>
+
+          {/* 📍 Адреса */}
           <Box 
             ref={(el: HTMLDivElement | null) => { sectionRefs.current['addresses'] = el; }} 
             sx={{ mb: 5, pb: 3, borderBottom: '1px solid', borderColor: 'divider' }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 1, mb: 2 }}>
               <Home color="primary" />
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>Адреса</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>Адреса</Typography>
             </Box>
             <Grid container spacing={4}>
               {(['registrationAddress', 'actualAddress'] as const).map((addrKey, i) => (
                 <Grid key={addrKey} size={{ xs: 12, md: 6 }}>
-                  <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 600 }}>
+                  <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 600, color: 'text.primary' }}>
                     {i === 0 ? 'Адрес регистрации' : 'Фактический адрес'}
                   </Typography>
-                  <Divider sx={{ mb: 2 }} />
+                  <Divider sx={{ mb: 2, borderColor: 'divider' }} />
                   <Grid container spacing={2}>
                     <Grid size={{ xs: 6 }}><TextField fullWidth label="Регион *" {...control.register(`${addrKey}.region` as any)} /></Grid>
                     <Grid size={{ xs: 6 }}><TextField fullWidth label="Город *" {...control.register(`${addrKey}.city` as any)} /></Grid>
@@ -195,29 +211,32 @@ export default function ProfilePage() {
               ))}
             </Grid>
           </Box>
+
+          {/* 📍 Семья и Образование */}
           <Box 
             ref={(el: HTMLDivElement | null) => { sectionRefs.current['family'] = el; }} 
             sx={{ mb: 5, pb: 3, borderBottom: '1px solid', borderColor: 'divider' }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 1, mb: 2 }}>
               <School color="primary" />
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>Семья и Образование</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>Семья и Образование</Typography>
             </Box>
             <Grid container spacing={4}>
+              {/* Члены семьи */}
               <Grid size={{ xs: 12, md: 6 }}>
                 <Stack direction="row" sx={{ mb: 2, alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Члены семьи</Typography>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, color: 'text.primary' }}>Члены семьи</Typography>
                   <IconButton size="small" color="primary" onClick={() => appendFamily({ fullName: '', relation: 'child', birthDate: '' })}>
                     <Add />
                   </IconButton>
                 </Stack>
                 {familyFields.length === 0 ? (
                   <Typography variant="body2" color="text.secondary" sx={{ py: 2, fontStyle: 'italic' }}>
-                    Нет добавленных членов фи
+                    Нет добавленных членов семьи
                   </Typography>
                 ) : (
                   familyFields.map((field, i) => (
-                    <Grid key={field.id} container spacing={1} sx={{ mb: 2, p: 2, bgcolor: 'background.paper', borderRadius: 2, border: '1px solid', borderColor: 'divider' }}>
+                    <Grid key={field.id} container spacing={1} sx={{ mb: 2, p: 2, bgcolor: 'background.default', borderRadius: 2, border: '1px solid', borderColor: 'divider' }}>
                       <Grid size={12}><Typography variant="caption" color="text.secondary">Член семьи #{i + 1}</Typography></Grid>
                       <Grid size={{ xs: 12, sm: 4 }}><TextField size="small" fullWidth placeholder="ФИО *" {...control.register(`familyMembers.${i}.fullName` as any)} /></Grid>
                       <Grid size={{ xs: 12, sm: 4 }}>
@@ -239,9 +258,11 @@ export default function ProfilePage() {
                   ))
                 )}
               </Grid>
+              
+              {/* Образование */}
               <Grid size={{ xs: 12, md: 6 }}>
                 <Stack direction="row" sx={{ mb: 2, alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Образование</Typography>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, color: 'text.primary' }}>Образование</Typography>
                   <IconButton size="small" color="primary" onClick={() => appendEdu({ institution: '', level: 'secondary', graduationYear: undefined })}>
                     <Add />
                   </IconButton>
@@ -252,13 +273,15 @@ export default function ProfilePage() {
                   </Typography>
                 ) : (
                   eduFields.map((field, i) => (
-                    <Grid key={field.id} container spacing={1} sx={{ mb: 2, p: 2, bgcolor: 'background.paper', borderRadius: 2, border: '1px solid', borderColor: 'divider' }}>
+                    <Grid key={field.id} container spacing={1} sx={{ mb: 2, p: 2, bgcolor: 'background.default', borderRadius: 2, border: '1px solid', borderColor: 'divider' }}>
                       <Grid size={12}><Typography variant="caption" color="text.secondary">Запись #{i + 1}</Typography></Grid>
                       <Grid size={{ xs: 12, sm: 5 }}><TextField size="small" fullWidth placeholder="Учебное заведение *" {...control.register(`educationHistory.${i}.institution` as any)} /></Grid>
                       <Grid size={{ xs: 12, sm: 3 }}>
                         <Controller name={`educationHistory.${i}.level` as any} control={control} render={({ field }) => (
                           <TextField size="small" select fullWidth {...field}>
-                            <MenuItem value="secondary">Среднее</MenuItem>
+                            <MenuItem value="secondary">Среднее общее</MenuItem>
+                            <MenuItem value="spo">Среднее профессиональное (СПО)</MenuItem> 
+                            <MenuItem value="specialist">Специалитет</MenuItem> 
                             <MenuItem value="bachelor">Бакалавр</MenuItem>
                             <MenuItem value="master">Магистр</MenuItem>
                           </TextField>
@@ -274,17 +297,19 @@ export default function ProfilePage() {
               </Grid>
             </Grid>
           </Box>
+
+          {/* 📍 Финансы и Система */}
           <Box 
             ref={(el: HTMLDivElement | null) => { sectionRefs.current['finance'] = el; }} 
             sx={{ mb: 5 }}
           >
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1, mb: 3 }}>
               <AccountBalance color="primary" />
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>Финансы и Системные настройки</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>Финансы и Системные настройки</Typography>
             </Box>
             <Grid container spacing={4}>
               <Grid size={{ xs: 12, md: 6 }}>
-                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>Финансы</Typography>
+                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}>Финансы</Typography>
                 <Controller name="financial.incomeSource" control={control} render={({ field }) => (
                   <TextField select fullWidth label="Источник дохода *" {...field} sx={{ mb: 2 }}>
                     <MenuItem value="employment">Работа</MenuItem>
@@ -301,7 +326,7 @@ export default function ProfilePage() {
                 )} />
               </Grid>
               <Grid size={{ xs: 12, md: 6 }}>
-                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>Системные настройки</Typography>
+                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}>Системные настройки</Typography>
                 <Controller name="system.preferredLanguage" control={control} render={({ field }) => (
                   <TextField select fullWidth label="Язык интерфейса" {...field} sx={{ mb: 2 }}>
                     <MenuItem value="ru">Русский</MenuItem>
@@ -320,6 +345,8 @@ export default function ProfilePage() {
               </Grid>
             </Grid>
           </Box>
+
+          {/* 📌 Нижняя панель действий */}
           <Box sx={{ 
             position: 'sticky', bottom: 0, pt: 3, pb: 2, 
             bgcolor: 'background.paper', borderTop: '1px solid', borderColor: 'divider',
@@ -342,7 +369,6 @@ export default function ProfilePage() {
               </Button>
             </Stack>
           </Box>
-
         </form>
       </Paper>
 

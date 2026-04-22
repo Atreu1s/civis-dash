@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Typography, Box, TextField, Button, MenuItem, TablePagination, Skeleton, InputAdornment, Paper, Divider } from '@mui/material';
+import { Typography, Box, TextField, Button, MenuItem, TablePagination, Skeleton, InputAdornment, Paper, Divider, useTheme } from '@mui/material'; // ✅ Добавили useTheme
 import { Search, Clear } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useCitizens } from './hooks/useCitizen';
@@ -15,13 +15,7 @@ const useDebounce = <T,>(value: T, delay: number): T => {
   return debounced;
 };
 
-const glassStyle = {
-  bgcolor: 'rgba(25, 118, 210, 0.1)',
-  border: '1px solid',
-  borderColor: 'primary.main',
-  boxShadow: '0 6px 18px rgba(0, 0, 0, 0.3)',
-  borderRadius: 2,
-};
+// ✅ УДАЛЯЕМ glassStyle — теперь цвета берём из темы
 
 const scrollbarStyles = `
   .custom-scroll-container::-webkit-scrollbar {
@@ -50,6 +44,18 @@ const scrollbarStyles = `
 `;
 
 export default function RegistryPage() {
+  const theme = useTheme(); // ✅ Получаем тему
+  const isDark = theme.palette.mode === 'dark'; // ✅ Проверяем режим
+  
+  // ✅ Динамические стили "стекла" на основе темы
+  const glassStyle = {
+    bgcolor: isDark ? 'rgba(30, 41, 59, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+    border: '1px solid',
+    borderColor: isDark ? 'rgba(59, 130, 246, 0.3)' : 'rgba(25, 118, 210, 0.2)',
+    boxShadow: isDark ? '0 6px 18px rgba(0, 0, 0, 0.4)' : '0 6px 18px rgba(0, 0, 0, 0.15)',
+    borderRadius: 2,
+  };
+
   const [page, setPage] = useState(0);
   const [limit] = useState(50);
   const [search, setSearch] = useState('');
@@ -79,11 +85,12 @@ export default function RegistryPage() {
       flexDirection: 'column', 
       minHeight: '100vh',
       width: '100%',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      bgcolor: 'background.default', // ✅ Фон из темы
     }}>
       <style>{scrollbarStyles}</style>
       
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: 700,  pt: 2 }}>
+      <Typography variant="h5" sx={{ mb: 2, fontWeight: 700, pt: 2, px: { xs: 2, md: 4 }, color: 'text.primary' }}>
         Картотека граждан
       </Typography>
       
@@ -91,7 +98,8 @@ export default function RegistryPage() {
       <Paper sx={{ 
         ...glassStyle, 
         p: { xs: 2, md: 2 }, 
-        mb: 2, 
+        mb: 2,
+        mx: { xs: 2, md: 4 },
       }}>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
           <TextField 
@@ -99,11 +107,7 @@ export default function RegistryPage() {
             size="small" 
             sx={{ 
               flex: '1 1 200px',
-              '& .MuiOutlinedInput-root': {
-                bgcolor: 'rgba(255, 255, 255, 0.9)',
-                '&:hover fieldset': { borderColor: 'primary.main' },
-                '&.Mui-focused fieldset': { borderColor: 'primary.main', borderWidth: 2 },
-              }
+              // ✅ Убираем жёсткий bgcolor — MUI сам подставит нужный из темы
             }}
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(0); }}
@@ -130,13 +134,7 @@ export default function RegistryPage() {
             size="small" 
             value={region} 
             onChange={(e) => { setRegion(e.target.value); setPage(0); }} 
-            sx={{ 
-              minWidth: 180,
-              '& .MuiOutlinedInput-root': {
-                bgcolor: 'rgba(255, 255, 255, 0.9)',
-                '&:hover fieldset': { borderColor: 'primary.main' },
-              }
-            }}
+            sx={{ minWidth: 180 }}
           >
             <MenuItem value="">Все</MenuItem>
             <MenuItem value="Москва">Москва</MenuItem>
@@ -151,13 +149,7 @@ export default function RegistryPage() {
             size="small" 
             value={status} 
             onChange={(e) => { setStatus(e.target.value as CitizenStatus | ''); setPage(0); }} 
-            sx={{ 
-              minWidth: 160,
-              '& .MuiOutlinedInput-root': {
-                bgcolor: 'rgba(255, 255, 255, 0.9)',
-                '&:hover fieldset': { borderColor: 'primary.main' },
-              }
-            }}
+            sx={{ minWidth: 160 }}
           >
             <MenuItem value="">Все</MenuItem>
             <MenuItem value="активен">Активен</MenuItem>
@@ -169,10 +161,7 @@ export default function RegistryPage() {
             variant="outlined" 
             onClick={handleReset} 
             startIcon={<Clear />}
-            sx={{
-              bgcolor: 'rgba(255, 255, 255, 0.9)',
-              '&:hover': { bgcolor: 'white', borderColor: 'primary.dark' }
-            }}
+            // ✅ Стили кнопки теперь из темы (см. theme.ts)
           >
             Сбросить
           </Button>
@@ -181,6 +170,7 @@ export default function RegistryPage() {
 
       <Paper sx={{ 
         ...glassStyle, 
+        mx: { xs: 2, md: 4 },
         mb: 3,
         display: 'flex',
         flexDirection: 'column',
@@ -199,7 +189,11 @@ export default function RegistryPage() {
           {isLoading ? (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               {[...Array(3)].map((_, i) => (
-                <Paper key={i} sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(255,255,255,0.5)' }}>
+                <Paper key={i} sx={{ 
+                  p: 2, 
+                  borderRadius: 2, 
+                  bgcolor: isDark ? 'rgba(30, 41, 59, 0.5)' : 'rgba(255,255,255,0.5)' 
+                }}>
                   <Skeleton width="60%" height={24} sx={{ mb: 1 }} />
                   <Divider sx={{ my: 1 }} />
                   {[...Array(4)].map((__, j) => (
@@ -220,15 +214,14 @@ export default function RegistryPage() {
                   onClick={() => navigate(`/profile/${citizen.id}`)}
                   sx={{
                     p: 2,
-                    borderRadius: 2,
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
-                    bgcolor: 'rgba(255, 255, 255, 0.7)',
-                    border: '1px solid',
-                    borderColor: 'rgba(25, 118, 210, 0.2)',
+                    ...glassStyle,
                     '&:hover': {
                       transform: 'translateY(-2px)',
-                      boxShadow: '0 6px 20px rgba(25, 118, 210, 0.25)',
+                      boxShadow: isDark 
+                        ? '0 8px 24px rgba(0, 0, 0, 0.5)' 
+                        : '0 6px 20px rgba(25, 118, 210, 0.25)',
                       borderColor: 'primary.main',
                     },
                   }}
@@ -248,7 +241,7 @@ export default function RegistryPage() {
                       }}>
                         ФИО
                       </Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'text.primary' }}>
                         {citizen.lastName} {citizen.firstName} {citizen.patronymic || ''}
                       </Typography>
                     </Box>
@@ -261,7 +254,7 @@ export default function RegistryPage() {
                       }}>
                         Дата
                       </Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary' }}>
                         {citizen.birthDate ? new Date(citizen.birthDate).toLocaleDateString('ru-RU') : '—'}
                       </Typography>
                     </Box>
@@ -274,7 +267,7 @@ export default function RegistryPage() {
                       }}>
                         Регион
                       </Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'text.primary' }}>
                         {citizen.registrationAddress?.region || '—'}
                       </Typography>
                     </Box>
@@ -298,7 +291,7 @@ export default function RegistryPage() {
                       }}>
                         СНИЛС
                       </Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 500, fontFamily: 'monospace', letterSpacing: 0.5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500, fontFamily: 'monospace', letterSpacing: 0.5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'text.primary' }}>
                         {citizen.snils || '—'}
                       </Typography>
                     </Box>
@@ -323,7 +316,7 @@ export default function RegistryPage() {
                 sx={{ 
                   '& .MuiTablePagination-toolbar': { minHeight: 'auto' },
                   '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': { 
-                    m: 0, fontSize: '0.875rem' 
+                    m: 0, fontSize: '0.875rem', color: 'text.secondary'
                   }
                 }}
               />

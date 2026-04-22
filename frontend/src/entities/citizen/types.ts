@@ -156,4 +156,7 @@ export interface DashboardStats {
   processedThisWeek: number;
   ageDistribution: Array<{ group: string; count: number }>;
   regionDistribution: Array<{ region: string; count: number }>;
+  monthlyRegistrations: Array<{ month: string; registrations: number; verifications: number }>;
+  statusDistribution: Array<{ status: string; count: number }>;
+  regionActivity: Array<{ region: string; activeCount: number; pendingCount: number }>;
 }

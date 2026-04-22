@@ -9,9 +9,13 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [darkMode, setDarkMode] = useState(() => {
+    // ✅ 1. Проверяем localStorage
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('theme-mode');
-      return saved ? saved === 'dark' : false;
+      if (saved) return saved === 'dark';
+      
+      // ✅ 2. Если нет — проверяем системные настройки
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
     return false;
   });
@@ -20,8 +24,20 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('theme-mode', darkMode ? 'dark' : 'light');
   }, [darkMode]);
 
-  const toggleDarkMode = () => setDarkMode(prev => !prev);
+  // ✅ 3. Слушаем изменения системной темы (если пользователь не выбрал вручную)
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      const saved = localStorage.getItem('theme-mode');
+      if (!saved) {
+        setDarkMode(e.matches);
+      }
+    };
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
+  const toggleDarkMode = () => setDarkMode(prev => !prev);
   const value = useMemo(() => ({ darkMode, toggleDarkMode }), [darkMode]);
 
   return (
@@ -33,8 +49,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
 export function useThemeMode() {
   const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useThemeMode must be used within ThemeProvider');
-  }
+  if (!context) throw new Error('useThemeMode must be used within ThemeProvider');
   return context;
 }
