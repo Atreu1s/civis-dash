@@ -13,8 +13,6 @@ export default function DashboardPage() {
   const theme = useTheme();
   const { data, isLoading, error } = useDashboardStats();
   const isDark = theme.palette.mode === 'dark';
-
-  // 🎨 Общие стили карточек графиков (адаптивные)
   const chartCardSx = {
     bgcolor: isDark ? 'rgba(30, 41, 59, 0.6)' : 'rgba(25, 118, 210, 0.1)',
     border: '1px solid',
@@ -28,8 +26,6 @@ export default function DashboardPage() {
       strokeDasharray: '3 3'
     }
   };
-
-  // 📊 Подготовка данных для графиков
   const pieData = (data?.regionDistribution ?? [])
     .slice(0, 5)
     .map((item, i) => ({ name: item.region, value: item.count, fill: BLUE_PALETTE[i % 5] }));
@@ -77,7 +73,6 @@ export default function DashboardPage() {
 
   return (
     <Box sx={{ pt: { xs: 8, md: 6 } }}>
-      {/* Заголовок */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, flexWrap: 'wrap', gap: 2 }}>
         <Box>
           <Typography variant="h4" sx={{ fontWeight: 700 }}>Статистика по учёту граждан</Typography>
@@ -86,7 +81,6 @@ export default function DashboardPage() {
         <Chip sx={{ bgcolor: isDark ? 'rgba(30, 41, 59, 0.6)' : 'rgba(25, 118, 210, 0.1)', border: '1px solid', borderColor: 'primary.main' }} label="Период: 30 дней" size="small" variant="outlined" />
       </Box>
 
-      {/* Метрики */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <StatsCard title="Всего граждан" value={data?.totalCitizens ?? 0} icon={<People color="primary" />} color="primary" trend={12.5} trendBold isLoading={isLoading} />
@@ -102,7 +96,6 @@ export default function DashboardPage() {
         </Grid>
       </Grid>
 
-      {/* 📊 Ряд 1: Основные распределения */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, md: 7 }}>
           <Card sx={chartCardSx}>
@@ -142,9 +135,7 @@ export default function DashboardPage() {
         </Grid>
       </Grid>
 
-      {/* 📊 Ряд 2: 3 Компактных графика (вместо одного большого) */}
       <Grid container spacing={3}>
-        {/* 1. Динамика */}
         <Grid size={{ xs: 12, lg: 4 }}>
           <Card sx={chartCardSx}>
             <CardContent sx={{ flexGrow: 1, p: 2 }}>
@@ -169,7 +160,6 @@ export default function DashboardPage() {
           </Card>
         </Grid>
 
-        {/* 2. Статусы */}
         <Grid size={{ xs: 12, lg: 4 }}>
           <Card sx={chartCardSx}>
             <CardContent sx={{ flexGrow: 1, p: 2 }}>
@@ -189,7 +179,6 @@ export default function DashboardPage() {
           </Card>
         </Grid>
 
-        {/* 3. Активность регионов */}
         <Grid size={{ xs: 12, lg: 4 }}>
           <Card sx={chartCardSx}>
             <CardContent sx={{ flexGrow: 1, p: 2 }}>

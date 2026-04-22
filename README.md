@@ -56,3 +56,162 @@ npm install
 npm run dev
 
 # Open browser → http://localhost:5173
+```
+civis-dash
+├─ README.md
+└─ frontend
+   ├─ README.md
+   ├─ eslint.config.js
+   ├─ index.html
+   ├─ package-lock.json
+   ├─ package.json
+   ├─ public
+   │  ├─ favicon.svg
+   │  ├─ icons.svg
+   │  └─ mockServiceWorker.js
+   ├─ src
+   │  ├─ App.css
+   │  ├─ App.tsx
+   │  ├─ app
+   │  │  └─ theme.ts
+   │  ├─ assets
+   │  │  ├─ hero.png
+   │  │  ├─ react.svg
+   │  │  └─ vite.svg
+   │  ├─ components
+   │  │  └─ BlockNavigator
+   │  │     ├─ BlockNavigator.css
+   │  │     └─ lockNavigator.jsx
+   │  ├─ context
+   │  │  └─ ThemeContext.tsx
+   │  ├─ entities
+   │  │  └─ citizen
+   │  │     └─ types.ts
+   │  ├─ index.css
+   │  ├─ main.tsx
+   │  ├─ mocks
+   │  │  ├─ browser.ts
+   │  │  └─ handlers.ts
+   │  ├─ pages
+   │  │  ├─ dashboard
+   │  │  │  ├─ components
+   │  │  │  │  └─ StatsCard.tsx
+   │  │  │  ├─ hooks
+   │  │  │  │  └─ useDashStats.ts
+   │  │  │  └─ index.tsx
+   │  │  ├─ profile
+   │  │  │  ├─ hooks
+   │  │  │  │  └─ useCitizenById.ts
+   │  │  │  ├─ index.tsx
+   │  │  │  ├─ schemas
+   │  │  │  │  └─ profileSchema.ts
+   │  │  │  └─ store
+   │  │  │     └─ userStore.ts
+   │  │  └─ register
+   │  │     ├─ components
+   │  │     │  ├─ CitizenTable.tsx
+   │  │     │  └─ StatusStyle.tsx
+   │  │     ├─ hooks
+   │  │     │  └─ useCitizen.ts
+   │  │     └─ index.tsx
+   │  └─ utils
+   │     └─ statusStyle.ts
+   ├─ tsconfig.app.json
+   ├─ tsconfig.json
+   ├─ tsconfig.node.json
+   └─ vite.config.ts
+
+```
+```
+civis-dash
+├─ README.md
+└─ frontend
+   ├─ README.md
+   ├─ eslint.config.js
+   ├─ index.html
+   ├─ package-lock.json
+   ├─ package.json
+   ├─ public
+   │  ├─ favicon.svg
+   │  ├─ icons.svg
+   │  └─ mockServiceWorker.js
+   ├─ src
+   │  ├─ App.css
+   │  ├─ App.tsx
+   │  ├─ app
+   │  │  └─ theme.ts
+   │  ├─ assets
+   │  │  ├─ hero.png
+   │  │  ├─ react.svg
+   │  │  └─ vite.svg
+   │  ├─ components
+   │  │  └─ BlockNavigator
+   │  │     ├─ BlockNavigator.css
+   │  │     └─ lockNavigator.jsx
+   │  ├─ context
+   │  │  └─ ThemeContext.tsx
+   │  ├─ entities
+   │  │  └─ citizen
+   │  │     └─ types.ts
+   │  ├─ index.css
+   │  ├─ main.tsx
+   │  ├─ mocks
+   │  │  ├─ browser.ts
+   │  │  └─ handlers.ts
+   │  ├─ pages
+   │  │  ├─ dashboard
+   │  │  │  ├─ components
+   │  │  │  │  └─ StatsCard.tsx
+   │  │  │  ├─ hooks
+   │  │  │  │  └─ useDashStats.ts
+   │  │  │  └─ index.tsx
+   │  │  ├─ profile
+   │  │  │  ├─ components
+   │  │  │  │  ├─ ProfileActions.tsx
+   │  │  │  │  ├─ ProfileHeader.tsx
+   │  │  │  │  ├─ SectionWrapper.tsx
+   │  │  │  │  └─ sections
+   │  │  │  │     ├─ AddressesSection.tsx
+   │  │  │  │     ├─ AuditSection.tsx
+   │  │  │  │     ├─ BenefitsSection.tsx
+   │  │  │  │     ├─ ChildrenSection.tsx
+   │  │  │  │     ├─ ContactsSection.tsx
+   │  │  │  │     ├─ DocumentsSection.tsx
+   │  │  │  │     ├─ EducationSection.tsx
+   │  │  │  │     ├─ EmploymentSection.tsx
+   │  │  │  │     ├─ FamilySection.tsx
+   │  │  │  │     ├─ FinanceSection.tsx
+   │  │  │  │     ├─ HousingSection.tsx
+   │  │  │  │     ├─ LanguagesSection.tsx
+   │  │  │  │     ├─ LegalSection.tsx
+   │  │  │  │     ├─ MedicalSection.tsx
+   │  │  │  │     ├─ MigrationSection.tsx
+   │  │  │  │     ├─ MilitarySection.tsx
+   │  │  │  │     ├─ PersonalSection.tsx
+   │  │  │  │     ├─ PropertySection.tsx
+   │  │  │  │     ├─ SkillsSection.tsx
+   │  │  │  │     └─ SystemSection.tsx
+   │  │  │  ├─ config
+   │  │  │  │  └─ sectionsConfig.ts
+   │  │  │  ├─ hooks
+   │  │  │  │  └─ useCitizenById.ts
+   │  │  │  ├─ index.tsx
+   │  │  │  ├─ schemas
+   │  │  │  │  └─ profileSchema.ts
+   │  │  │  └─ store
+   │  │  │     └─ userStore.ts
+   │  │  └─ register
+   │  │     ├─ components
+   │  │     │  ├─ CitizenTable.tsx
+   │  │     │  └─ StatusStyle.tsx
+   │  │     ├─ hooks
+   │  │     │  └─ useCitizen.ts
+   │  │     └─ index.tsx
+   │  └─ utils
+   │     └─ statusStyle.ts
+   ├─ tsconfig.app.json
+   ├─ tsconfig.json
+   ├─ tsconfig.node.json
+   └─ vite.config.ts
+
+```

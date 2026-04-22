@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material/styles'; // ✅ Просто ThemeProvider
+import { ThemeProvider } from '@mui/material/styles'; 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getThemeByMode } from './app/theme';
 import { ThemeProvider as AppThemeProvider, useThemeMode } from './context/ThemeContext';
@@ -14,13 +14,12 @@ const queryClient = new QueryClient({
   },
 });
 
-// ✅ Компонент, который получает тему из контекста
 function ThemedApp() {
   const { darkMode } = useThemeMode();
   const theme = getThemeByMode(darkMode ? 'dark' : 'light');
 
   return (
-    <ThemeProvider theme={theme}> {/* ✅ Просто ThemeProvider */}
+    <ThemeProvider theme={theme}> 
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<AppShell />}>

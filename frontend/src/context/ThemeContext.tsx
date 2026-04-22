@@ -9,12 +9,9 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [darkMode, setDarkMode] = useState(() => {
-    // ✅ 1. Проверяем localStorage
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('theme-mode');
       if (saved) return saved === 'dark';
-      
-      // ✅ 2. Если нет — проверяем системные настройки
       return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
     return false;
@@ -23,8 +20,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     localStorage.setItem('theme-mode', darkMode ? 'dark' : 'light');
   }, [darkMode]);
-
-  // ✅ 3. Слушаем изменения системной темы (если пользователь не выбрал вручную)
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => {

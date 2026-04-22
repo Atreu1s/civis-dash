@@ -1,4 +1,3 @@
-// src/pages/registry/components/CitizenTable.tsx
 import { useNavigate } from 'react-router-dom';
 import {
   useReactTable, getCoreRowModel, getSortedRowModel, flexRender,
@@ -43,7 +42,6 @@ export default function CitizenTable({ data, sorting, onSortingChange }: Citizen
 
   return (
     <TableContainer component={Paper} sx={{ maxHeight: 600, overflow: 'auto', width: '100%' }}>
-      {/* ✅ tableLayout: fixed + colgroup = колонки всегда 20% */}
       <Table sx={{ tableLayout: 'fixed', width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
         <colgroup>
           {[0, 1, 2, 3, 4].map(i => <col key={i} style={{ width: '20%' }} />)}
@@ -73,7 +71,6 @@ export default function CitizenTable({ data, sorting, onSortingChange }: Citizen
           ))}
         </TableHead>
 
-        {/* ✅ Обычный tbody без виртуализации — colgroup работает */}
         <TableBody>
           {table.getRowModel().rows.map(row => (
             <TableRow

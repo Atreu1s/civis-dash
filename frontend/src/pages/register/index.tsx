@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Typography, Box, TextField, Button, MenuItem, TablePagination, Skeleton, InputAdornment, Paper, Divider, useTheme } from '@mui/material'; // ✅ Добавили useTheme
+import { Typography, Box, TextField, Button, MenuItem, TablePagination, Skeleton, InputAdornment, Paper, Divider, useTheme } from '@mui/material'; 
 import { Search, Clear } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useCitizens } from './hooks/useCitizen';
@@ -14,8 +14,6 @@ const useDebounce = <T,>(value: T, delay: number): T => {
   }, [value, delay]);
   return debounced;
 };
-
-// ✅ УДАЛЯЕМ glassStyle — теперь цвета берём из темы
 
 const scrollbarStyles = `
   .custom-scroll-container::-webkit-scrollbar {
@@ -44,10 +42,8 @@ const scrollbarStyles = `
 `;
 
 export default function RegistryPage() {
-  const theme = useTheme(); // ✅ Получаем тему
-  const isDark = theme.palette.mode === 'dark'; // ✅ Проверяем режим
-  
-  // ✅ Динамические стили "стекла" на основе темы
+  const theme = useTheme(); 
+  const isDark = theme.palette.mode === 'dark'; 
   const glassStyle = {
     bgcolor: isDark ? 'rgba(30, 41, 59, 0.7)' : 'rgba(255, 255, 255, 0.7)',
     border: '1px solid',
@@ -86,15 +82,13 @@ export default function RegistryPage() {
       minHeight: '100vh',
       width: '100%',
       overflow: 'hidden',
-      bgcolor: 'background.default', // ✅ Фон из темы
+      bgcolor: 'background.default', 
     }}>
       <style>{scrollbarStyles}</style>
       
       <Typography variant="h5" sx={{ mb: 2, fontWeight: 700, pt: 2, px: { xs: 2, md: 4 }, color: 'text.primary' }}>
         Картотека граждан
       </Typography>
-      
-      {/* Фильтры */}
       <Paper sx={{ 
         ...glassStyle, 
         p: { xs: 2, md: 2 }, 
@@ -107,7 +101,6 @@ export default function RegistryPage() {
             size="small" 
             sx={{ 
               flex: '1 1 200px',
-              // ✅ Убираем жёсткий bgcolor — MUI сам подставит нужный из темы
             }}
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(0); }}
@@ -161,7 +154,6 @@ export default function RegistryPage() {
             variant="outlined" 
             onClick={handleReset} 
             startIcon={<Clear />}
-            // ✅ Стили кнопки теперь из темы (см. theme.ts)
           >
             Сбросить
           </Button>
