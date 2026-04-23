@@ -35,7 +35,7 @@ export default function AppShell() {
     boxSizing: 'border-box',
     width: DRAWER_WIDTH,
     bgcolor: { 
-      xs: theme.palette.primary.main, 
+      xs: darkMode ? 'rgba(30, 41, 59, 0.9)' : 'rgba(25, 118, 210, 0.9)',
       md: darkMode ? 'rgba(30, 41, 59, 0.7)' : 'rgba(25, 118, 210, 0.1)' 
     },
     borderRight: '1px solid',
@@ -163,14 +163,6 @@ export default function AppShell() {
         }}
       >
         <Toolbar />
-        <Typography variant="h6" sx={{ 
-          px: 3, 
-          mb: 1, 
-          fontWeight: 700, 
-          color: { xs: '#ffffff', md: darkMode ? '#f1f5f9' : '#172b4d' } 
-        }}>
-          Civis Dash
-        </Typography>
         {menuContent}
       </Drawer>
       
