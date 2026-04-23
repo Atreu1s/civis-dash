@@ -28,9 +28,9 @@ Inspired by the requirements of government and enterprise data portals, this pro
 ![Recharts](https://img.shields.io/badge/Recharts-2-%2375B400?style=for-the-badge&logo=recharts&logoColor=white)
 
 ### Testing & Quality
-![Jest](https://img.shields.io/badge/Jest-29-%23C21325?style=for-the-badge&logo=jest&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-1-%236E9F18?style=for-the-badge&logo=vitest&logoColor=white)
 ![RTL](https://img.shields.io/badge/Testing_Library-%23E33332?style=for-the-badge&logo=testing-library&logoColor=white)
-![JMeter](https://img.shields.io/badge/Apache_JMeter-5.6-%23D22128?style=for-the-badge&logo=apache&logoColor=white)
+![MSW](https://img.shields.io/badge/MSW-2-%23FF6A00?style=for-the-badge&logo=mockserviceworker&logoColor=white)
 ![ESLint](https://img.shields.io/badge/ESLint-8-%234B32C3?style=for-the-badge&logo=eslint&logoColor=white)
 ![Prettier](https://img.shields.io/badge/Prettier-3-%23F7B93E?style=for-the-badge&logo=prettier&logoColor=black)
 
