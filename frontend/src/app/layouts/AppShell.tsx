@@ -45,8 +45,14 @@ export default function AppShell() {
   const menuContent = (
     <List disablePadding sx={{ mt: 1 }}>
       {navItems.map((item) => {
-        const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
-        return (
+      const isActive = 
+        item.path === '/' 
+          ? location.pathname === '/' 
+          : item.path === '/profile/demo' 
+            ? location.pathname.startsWith('/profile/') 
+            : location.pathname === item.path || location.pathname.startsWith(item.path);
+      
+      return (
           <ListItem key={item.path} disablePadding sx={{ mb: 0.5, px: 0 }}>
             <ListItemButton
               selected={isActive}
