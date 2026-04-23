@@ -7,6 +7,7 @@ import AppShell from './app/layouts/AppShell';
 import DashboardPage from './pages/dashboard';
 import RegistryPage from './pages/register';
 import ProfilePage from './pages/profile';
+import './index.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {

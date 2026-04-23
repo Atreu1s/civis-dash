@@ -64,12 +64,12 @@ export const SectionWrapper: React.FC<SectionWrapperProps> = ({
         </Typography>
       </Box>
 
-      <Paper
-        variant="outlined"
-        elevation={0}
-        sx={{
-          p: { xs: 2, sm: 2.5, md: 3 },
-          borderRadius: 3,
+      <Paper 
+        variant="outlined" 
+        elevation={0} 
+        sx={{ 
+          p: { xs: 1.5, sm: 2, md: 3 }, // Уменьшаем padding на мобильных
+          borderRadius: { xs: 1.5, sm: 2, md: 3 },
           bgcolor: 'background.paper',
           borderColor: readOnly ? 'divider' : 'grey.300',
           transition: 'border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out',

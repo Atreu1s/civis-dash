@@ -59,7 +59,7 @@ export const ContactsSection: React.FC<ContactsSectionProps> = ({ control, secti
           <ContactList title="Соцсети / Мессенджеры" {...socials} onAdd={() => socials.append('')} onRemove={socials.remove} namePath="socials" icon={<Link fontSize="small" />} placeholder="tg: @username" isEditable={isEditable} control={control} />
         </Grid>
       </Grid>
-      <Grid container spacing={3} sx={{ mt: 1 }}>
+      <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }} sx={{ mt: 1 }}>
         <Grid size={{ xs: 12, sm: 6 }}>
           <TextField fullWidth label="Экстренный контакт (ФИО)" {...control.register('emergencyContact.name')} disabled={!isEditable} />
         </Grid>

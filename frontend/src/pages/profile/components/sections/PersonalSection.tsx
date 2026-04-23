@@ -11,7 +11,7 @@ interface PersonalSectionProps extends Pick<SectionWrapperProps, 'sectionRef'> {
 
 export const PersonalSection: React.FC<PersonalSectionProps> = ({ control, sectionRef, isEditable = true }) => (
   <SectionWrapper id="personal" title="Личные данные" icon={<Person color="primary" />} sectionRef={sectionRef}>
-    <Grid container spacing={3}>
+    <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
       <Grid size={{ xs: 12, sm: 4 }}>
         <TextField fullWidth label="Фамилия *" {...control.register('lastName')} disabled={!isEditable} />
       </Grid>

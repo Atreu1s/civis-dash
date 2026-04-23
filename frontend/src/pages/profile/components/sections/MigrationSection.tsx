@@ -10,7 +10,7 @@ interface MigrationSectionProps extends Pick<SectionWrapperProps, 'sectionRef'> 
 
 export const MigrationSection: React.FC<MigrationSectionProps> = ({ control, sectionRef, isEditable = true }) => (
   <SectionWrapper id="migration" title="Миграционный учёт" icon={<AirplaneTicket color="primary" />} sectionRef={sectionRef}>
-    <Grid container spacing={3}>
+    <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
       <Grid size={{ xs: 12, sm: 4 }}>
         <Controller name="migration.status" control={control} render={({ field }) => (
           <TextField select fullWidth label="Статус пребывания" {...field} disabled={!isEditable}>

@@ -15,7 +15,7 @@ export const DocumentsSection: React.FC<DocumentsSectionProps> = ({ control, sec
         <Badge color="primary" />
         <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Паспорт РФ</Typography>
       </Box>
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
         <Grid size={{ xs: 12, sm: 3 }}><TextField fullWidth label="Серия" {...control.register('passport.series')} placeholder="0000" disabled={!isEditable} /></Grid>
         <Grid size={{ xs: 12, sm: 3 }}><TextField fullWidth label="Номер" {...control.register('passport.number')} placeholder="000000" disabled={!isEditable} /></Grid>
         <Grid size={{ xs: 12, sm: 3 }}><TextField fullWidth type="date" label="Дата выдачи" {...control.register('passport.issueDate')} slotProps={{ inputLabel: { shrink: true } }} disabled={!isEditable} /></Grid>
@@ -31,7 +31,7 @@ export const DocumentsSection: React.FC<DocumentsSectionProps> = ({ control, sec
         <CreditCard color="primary" />
         <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Прочие документы</Typography>
       </Box>
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
         <Grid size={{ xs: 12, sm: 4 }}>
           <Controller name="documents.driverLicense" control={control} render={({ field }) => (
             <TextField select fullWidth label="Водительское удостоверение" {...field} disabled={!isEditable}>

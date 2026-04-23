@@ -12,7 +12,7 @@ export const MedicalSection: React.FC<MedicalSectionProps> = ({ control, section
   <SectionWrapper id="medical" title="Медицинские данные" icon={<LocalHospital color="primary" />} sectionRef={sectionRef}>
     <Box sx={{ mb: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}><Vaccines color="primary" /><Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Страхование и полисы</Typography></Box>
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
         <Grid size={{ xs: 12, sm: 4 }}><TextField fullWidth label="Полис ОМС" {...control.register('medical.omsPolicy')} placeholder="0000 000000 0" disabled={!isEditable} /></Grid>
         <Grid size={{ xs: 12, sm: 4 }}><TextField fullWidth label="Полис ДМС" {...control.register('medical.dmsPolicy')} placeholder="Номер полиса" disabled={!isEditable} /></Grid>
         <Grid size={{ xs: 12, sm: 4 }}><TextField fullWidth label="Страховая компания" {...control.register('medical.insuranceCompany')} disabled={!isEditable} /></Grid>
@@ -23,7 +23,7 @@ export const MedicalSection: React.FC<MedicalSectionProps> = ({ control, section
 
     <Box sx={{ mb: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}><AccessibilityNew color="primary" /><Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Здоровье и инвалидность</Typography></Box>
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
         <Grid size={{ xs: 12, sm: 4 }}>
           <Controller name="medical.bloodGroup" control={control} render={({ field }) => (
             <TextField select fullWidth label="Группа крови" {...field} disabled={!isEditable}>
@@ -59,7 +59,7 @@ export const MedicalSection: React.FC<MedicalSectionProps> = ({ control, section
       </Grid>
     </Box>
 
-    <Grid container spacing={3}>
+    <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
       <Grid size={{ xs: 12 }}>
         <TextField fullWidth multiline rows={3} label="Примечания / Аллергии / Противопоказания" {...control.register('medical.notes')} disabled={!isEditable} />
       </Grid>

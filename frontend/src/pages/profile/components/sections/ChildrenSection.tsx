@@ -28,7 +28,7 @@ export const ChildrenSection: React.FC<ChildrenSectionProps> = ({ control, secti
 
       {hasChildren && (
         <>
-          <Grid container spacing={3} sx={{ mb: 2 }}>
+          <Grid spacing={{ xs: 1.5, sm: 2, md: 3 }} sx={{ mb: 2 }}>
             <Grid size={{ xs: 12, sm: 4 }}>
               <TextField fullWidth type="number" label="Количество детей" {...control.register('childrenCount', { valueAsNumber: true })} disabled={!isEditable} />
             </Grid>

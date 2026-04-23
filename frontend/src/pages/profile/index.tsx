@@ -52,82 +52,82 @@ export default function ProfilePage() {
   const { data: citizen, isLoading, error } = useCitizenById(id);
   const { setDraft, clearDraft } = useProfileDraft();
 
-const defaultValues: Partial<ProfileFormData> = {
-  lastName: '',
-  firstName: '',
-  patronymic: '',
-  birthDate: '',
-  birthPlace: '',
-  gender: 'male',
-  maritalStatus: 'single',
-  citizenship: '',
-  nationality: '',
-  phonePrimary: '',
-  phoneSecondary: '',
-  email: '',
-  emergencyContactName: '',
-  emergencyContactPhone: '',
-  snils: '',
-  inn: '',
+  const defaultValues: Partial<ProfileFormData> = {
+    lastName: '',
+    firstName: '',
+    patronymic: '',
+    birthDate: '',
+    birthPlace: '',
+    gender: 'male',
+    maritalStatus: 'single',
+    citizenship: '',
+    nationality: '',
+    phonePrimary: '',
+    phoneSecondary: '',
+    email: '',
+    emergencyContactName: '',
+    emergencyContactPhone: '',
+    snils: '',
+    inn: '',
 
-  registrationAddress: {
-    region: '', city: '', district: '', street: '', building: '',
-    apartment: '', postalCode: '', isRegistered: true
-  },
-  actualAddress: {
-    region: '', city: '', district: '', street: '', building: '',
-    apartment: '', postalCode: '', isRegistered: undefined
-  },
+    registrationAddress: {
+      region: '', city: '', district: '', street: '', building: '',
+      apartment: '', postalCode: '', isRegistered: true
+    },
+    actualAddress: {
+      region: '', city: '', district: '', street: '', building: '',
+      apartment: '', postalCode: '', isRegistered: undefined
+    },
 
-  hasChildren: false,
-  childrenCount: 0,
-  isLargeFamily: false,
-  familyMembers: [],
-  educationHistory: [],
-  employmentHistory: [],
+    hasChildren: false,
+    childrenCount: 0,
+    isLargeFamily: false,
+    familyMembers: [],
+    educationHistory: [],
+    employmentHistory: [],
 
-  medical: {
-    bloodGroup: undefined,
-    allergies: [],
-    chronicDiseases: [],
-    disabilityGroup: null,
-    disabilityCertificate: '',
-    lastCheckupDate: null
-  },
-  isVeteran: false,
-  isPensioner: false,
-  pensionType: null,
-  socialBenefits: [],
-  housingCondition: 'adequate',
-  subsidyEligible: false,
-  militaryCategory: 'fit',
-  militaryUnit: null,
-  rank: null,
-  draftDate: null,
-  conscriptionRegion: null,
-  mobilizationStatus: 'civilian',
+    medical: {
+      bloodGroup: undefined,
+      allergies: [],
+      chronicDiseases: [],
+      disabilityGroup: null,
+      disabilityCertificate: '',
+      lastCheckupDate: null
+    },
+    isVeteran: false,
+    isPensioner: false,
+    pensionType: null,
+    socialBenefits: [],
+    housingCondition: 'adequate',
+    subsidyEligible: false,
+    militaryCategory: 'fit',
+    militaryUnit: null,
+    rank: null,
+    draftDate: null,
+    conscriptionRegion: null,
+    mobilizationStatus: 'civilian',
 
-  financial: {
-    taxNumber: '',
-    bankAccountMasked: '',
-    hasDebts: false,
-    debtAmount: 0,
-    propertyOwnership: [],
-    incomeSource: 'employment'
-  },
-  system: {
-    assignedOperator: '',
-    department: '',
-    verificationLevel: 'basic',
-    dataConsentGiven: true,
-    preferredLanguage: 'ru',
-    communicationChannel: 'email',
-    tags: [],
-    internalNotes: ''
-  },
-  status: 'active',
-  profileCompletionPercent: 0
-};
+    financial: {
+      taxNumber: '',
+      bankAccountMasked: '',
+      hasDebts: false,
+      debtAmount: 0,
+      propertyOwnership: [],
+      incomeSource: 'employment'
+    },
+    system: {
+      assignedOperator: '',
+      department: '',
+      verificationLevel: 'basic',
+      dataConsentGiven: true,
+      preferredLanguage: 'ru',
+      communicationChannel: 'email',
+      tags: [],
+      internalNotes: ''
+    },
+    status: 'active',
+    profileCompletionPercent: 0
+  };
 
   const methods = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema) as Resolver<ProfileFormData>,
@@ -136,11 +136,13 @@ const defaultValues: Partial<ProfileFormData> = {
   });
 
   const { control, handleSubmit, reset, formState: { isValid, isSubmitting } } = methods;
+  
   useEffect(() => {
     if (citizen) {
       reset({ ...defaultValues, ...(citizen as unknown as Partial<ProfileFormData>) });
     }
   }, [citizen, reset]);
+  
   useEffect(() => {
     const subscription = methods.watch((value) => {
       if (value) setDraft(value as unknown as Partial<Citizen>);
@@ -152,6 +154,7 @@ const defaultValues: Partial<ProfileFormData> = {
     setActiveTab(newValue);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+  
   const onSubmit: SubmitHandler<ProfileFormData> = async (data) => {
     clearDraft();
     console.log('✅ Данные сохранены:', data);
@@ -180,10 +183,34 @@ const defaultValues: Partial<ProfileFormData> = {
 
   return (
     <FormProvider {...methods}>
-      <Box sx={{ pt: { xs: 2, md: 4 }, pb: 10, bgcolor: 'background.default', minHeight: '100vh' }}>
-        <Paper sx={{ maxWidth: 1100, mx: 'auto', p: { xs: 2, md: 4 }, borderRadius: 3, boxShadow: 3 }}>
+      <Box sx={{ 
+        padding: { xs: '16px 0', sm: '16px' },
+        pt: { xs: 2, md: 4 }, 
+        pb: { xs: 12, sm: 10, md: 10 }, 
+        bgcolor: 'background.default', 
+        minHeight: '100vh',
+        ml: { xs: '0 !important', sm: 2 },     
+        pl: { xs: 0, sm: 0 },      
+        width: { xs: '100%', sm: 'auto' },
+        maxWidth: { xs: '100vw', sm: 'none' },
+        boxSizing: 'border-box',
+        overflowX: 'hidden'
+      }}>
+        <Paper sx={{ 
+          minWidth: 0, 
+          maxWidth: 1100, 
+          width: '100%', 
+          mx: 0,         
+          p: { xs: 1, sm: 1.5, md: 4 }, 
+          borderRadius: { xs: 0, sm: 1.5, md: 3 }, 
+          boxShadow: 3,
+          boxSizing: 'border-box',
+          overflow: 'hidden',
+          border: '1px solid',
+          borderColor: (t) => t.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : t.palette.divider,
+        }}>
           
-          <Stack direction="row" sx={{ mb: 3, flexWrap: 'wrap', gap: 2, justifyContent: 'space-between', alignItems: 'center' }}>
+          <Stack direction="row" sx={{ mb: { xs: 2, sm: 3 }, flexWrap: 'wrap', gap: 2, justifyContent: 'space-between', alignItems: 'center' }}>
             <Box onClick={() => navigate('/registry')} sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
               <ArrowBack fontSize="small" />
               <Typography variant="body2">Назад в картотеку</Typography>
@@ -200,15 +227,44 @@ const defaultValues: Partial<ProfileFormData> = {
             onNavigateToSection={() => {}} 
           />
 
-          <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 4 }}>
-            <Tabs value={activeTab} onChange={handleTabChange} variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
+          <Box sx={{ 
+            borderBottom: 1, 
+            borderColor: 'divider', 
+            mb: { xs: 2, md: 4 }, 
+            minWidth: 0,
+            overflow: 'hidden',
+            width: '100%'
+          }}>
+            <Tabs 
+              value={activeTab} 
+              onChange={handleTabChange} 
+              variant="scrollable" 
+              scrollButtons="auto" 
+              allowScrollButtonsMobile
+              sx={{
+                minWidth: 0,
+                width: '100%',
+                '& .MuiTabs-flexContainer': { minWidth: 0, width: '100%' },
+                '& .MuiTab-root': { 
+                  minWidth: 0, 
+                  px: { xs: 0.5, sm: 2 }, 
+                  fontSize: { xs: '0.65rem', sm: '0.875rem' },
+                  lineHeight: 1.2,
+                  '& .MuiTab-icon': { 
+                    fontSize: { xs: '0.85rem', sm: '1.25rem' }, 
+                    mr: { xs: 0.3, sm: 1 } 
+                  }
+                },
+                '& .MuiTabs-indicator': { height: 3 }
+              }}
+            >
               {tabsConfig.map((tab) => (
                 <Tab key={tab.id} icon={tab.icon} iconPosition="start" label={tab.label} />
               ))}
             </Tabs>
           </Box>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)} style={{ minWidth: 0, width: '100%' }}>
             <TabPanel value={activeTab} index={0}>
               <PersonalSection control={safeControl} />
               <ContactsSection control={safeControl} />

@@ -1,0 +1,35 @@
+@media (max-width: 479px) {
+  html, body, #root {
+    overflow-x: hidden;
+    max-width: 100vw;
+    margin: 0;
+    padding: 0;
+  }
+  .MuiGrid-root, 
+  .MuiStack-root, 
+  .MuiPaper-root, 
+  .MuiInputBase-root,
+  .MuiFormControl-root,
+  .MuiTextField-root {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+  .MuiTypography-root {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+  input, textarea, select {
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+@media (max-width: 599px) {
+  main.MuiBox-root.profile-page-mobile-reset {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top: 16px;    /* Оставляем вертикальные */
+    padding-bottom: 16px; /* Оставляем вертикальные */
+  }
+}

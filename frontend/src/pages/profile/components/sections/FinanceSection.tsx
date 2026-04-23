@@ -15,7 +15,7 @@ export const FinanceSection: React.FC<FinanceSectionProps> = ({ control, section
     <SectionWrapper id="finance" title="Финансы и доходы" icon={<AccountBalanceWallet color="primary" />} sectionRef={sectionRef}>
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}><Payments color="primary" /><Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Основной доход</Typography></Box>
-        <Grid container spacing={3}>
+        <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
           <Grid size={{ xs: 12, sm: 4 }}>
             <Controller name="finance.incomeSource" control={control} render={({ field }) => (
               <TextField select fullWidth label="Источник дохода" {...field} disabled={!isEditable}>
@@ -38,7 +38,7 @@ export const FinanceSection: React.FC<FinanceSectionProps> = ({ control, section
       <Divider sx={{ my: 2 }} />
       <Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}><Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Кредитная нагрузка</Typography></Box>
-        <Grid container spacing={3}>
+        <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
           <Grid size={{ xs: 12, sm: 4 }}>
             <Controller name="finance.hasDebts" control={control} render={({ field }) => (
               <FormControlLabel control={<Switch checked={!!field.value} onChange={field.onChange} disabled={!isEditable} />} label="Имеются задолженности" />

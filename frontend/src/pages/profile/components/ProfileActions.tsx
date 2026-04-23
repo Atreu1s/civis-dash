@@ -5,7 +5,7 @@ import {
   useTheme,
   alpha,
 } from '@mui/material';
-import { Save, Cancel, DeleteOutlined } from '@mui/icons-material';
+import { Save, DeleteOutlined } from '@mui/icons-material';
 import { memo } from 'react';
 
 export interface ProfileActionsProps {
@@ -40,46 +40,32 @@ export const ProfileActions: React.FC<ProfileActionsProps> = memo(
           right: 0,
           zIndex: theme.zIndex.appBar,
           pt: 2,
-          pb: { xs: 2, md: 3 },
-          px: { xs: 2, md: 4 },
+          pb: { xs: 1.5, md: 2 },
+          px: { xs: 1.5, md: 4 },
           bgcolor: alpha(theme.palette.background.paper, 0.95),
           backdropFilter: 'blur(8px)',
           borderTop: '1px solid',
           borderColor: 'divider',
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: 2,
+          flexDirection: { xs: 'column-reverse', sm: 'row' },
+          gap: { xs: 1.5, sm: 2 },
+          justifyContent: { xs: 'flex-end', sm: 'space-between' },
+          alignItems: { xs: 'stretch', sm: 'center' },
         }}
       >
-        <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}>
           {showDelete && onDelete && (
-            <Button
-              startIcon={<DeleteOutlined />}
-              onClick={onDelete}
-              variant="outlined"
-              color="error"
-              size="small"
-              sx={{ borderRadius: 2 }}
-            >
+            <Button startIcon={<DeleteOutlined />} onClick={onDelete} variant="outlined" color="error" size="small" sx={{ borderRadius: 2, width: { xs: '100%', sm: 'auto' } }}>
               Удалить профиль
             </Button>
           )}
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" color="text.secondary" sx={{ width: { xs: '100%', sm: 'auto' }, textAlign: { xs: 'center', sm: 'left' } }}>
             * Обязательные поля
           </Typography>
         </Box>
 
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button
-            startIcon={<Cancel />}
-            onClick={onCancel}
-            variant="outlined"
-            color="inherit"
-            disabled={isSubmitting}
-            sx={{ borderRadius: 2, minWidth: 120 }}
-          >
+        <Box sx={{ display: 'flex', gap: 2, width: { xs: '100%', sm: 'auto' }, flexDirection: { xs: 'column', sm: 'row' } }}>
+          <Button onClick={onCancel} variant="outlined" color="inherit" disabled={isSubmitting} sx={{ borderRadius: 2, width: '100%' }}>
             Отмена
           </Button>
           <Button
@@ -91,7 +77,7 @@ export const ProfileActions: React.FC<ProfileActionsProps> = memo(
             disabled={!isValid || isSubmitting}
             sx={{
               borderRadius: 2,
-              minWidth: 180,
+              width: '100%',
               fontWeight: 600,
               boxShadow: 'none',
               '&:hover': { boxShadow: theme.shadows[4] },

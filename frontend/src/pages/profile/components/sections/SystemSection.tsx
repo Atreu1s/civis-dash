@@ -12,7 +12,7 @@ export const SystemSection: React.FC<SystemSectionProps> = ({ control, sectionRe
   <SectionWrapper id="system" title="Системные настройки" icon={<Settings color="primary" />} sectionRef={sectionRef}>
     <Box sx={{ mb: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}><Shield color="primary" /><Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Доступ и безопасность</Typography></Box>
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
         <Grid size={{ xs: 12, sm: 4 }}>
           <Controller name="system.accessLevel" control={control} render={({ field }) => (
             <TextField select fullWidth label="Уровень доступа" {...field} disabled={!isEditable}>
@@ -43,7 +43,7 @@ export const SystemSection: React.FC<SystemSectionProps> = ({ control, sectionRe
     <Divider sx={{ my: 2 }} />
     <Box sx={{ mb: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}><Notifications color="primary" /><Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Уведомления и язык</Typography></Box>
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
         <Grid size={{ xs: 12, sm: 4 }}>
           <Controller name="system.language" control={control} render={({ field }) => (
             <TextField select fullWidth label="Язык интерфейса" {...field} disabled={!isEditable}>
@@ -67,7 +67,7 @@ export const SystemSection: React.FC<SystemSectionProps> = ({ control, sectionRe
     </Box>
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}><Info color="primary" /><Typography variant="subtitle1" sx={{ fontWeight: 600 }}>Внутренние заметки</Typography></Box>
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
         <Grid size={{ xs: 12 }}>
           <TextField fullWidth multiline rows={3} label="Заметки для операторов (не видны гражданину)" {...control.register('system.internalNotes')} disabled={!isEditable} />
         </Grid>
