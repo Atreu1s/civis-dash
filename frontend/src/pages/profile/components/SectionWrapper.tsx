@@ -68,7 +68,7 @@ export const SectionWrapper: React.FC<SectionWrapperProps> = ({
         variant="outlined" 
         elevation={0} 
         sx={{ 
-          p: { xs: 1.5, sm: 2, md: 3 }, // Уменьшаем padding на мобильных
+          p: { xs: 1.5, sm: 2, md: 3 }, 
           borderRadius: { xs: 1.5, sm: 2, md: 3 },
           bgcolor: 'background.paper',
           borderColor: readOnly ? 'divider' : 'grey.300',

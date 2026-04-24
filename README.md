@@ -1,10 +1,46 @@
 # Civis Dash
 
-**Civis Dash** is a React-based administrative panel designed for managing large-scale citizen databases. It features a high-performance data grid (100k+ records), multi-section profile cards with complex forms, and an analytics dashboard with real-time metrics visualization.
+Administrative panel for managing large-scale citizen databases. Built with React, TypeScript, and modern tooling to deliver high performance, type safety, and maintainable code structure.
 
-Inspired by the requirements of government and enterprise data portals, this project demonstrates a systematic approach to building maintainable, type-safe, and user-friendly applications.
+## Table of Contents
 
-## Stack:
+- [Overview](#overview)
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Project Structure](#project-structure)
+- [Architecture](#architecture)
+- [Available Scripts](#available-scripts)
+- [Testing](#testing)
+- [Environment Variables](#environment-variables)
+- [Performance Considerations](#performance-considerations)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Overview
+
+Civis Dash is a reference implementation of a government-grade data management interface. It addresses the requirements of handling 100,000+ citizen records with 150+ parameters per record and up to 20 related data tables (family members, education history, employment records, etc.).
+
+The project demonstrates:
+- Virtualized rendering for large datasets
+- Complex form management with validation
+- Modular architecture following Feature-Sliced Design principles
+- Comprehensive testing strategy
+- Responsive design with dark/light theme support
+
+## Features
+
+- **Dashboard**: Real-time metrics visualization with interactive charts
+- **Citizen Registry**: High-performance data grid with filtering, sorting, and pagination
+- **Profile Management**: Multi-section form with 150+ fields across 20 categories
+- **Form Validation**: Zod-based schema validation with React Hook Form
+- **State Management**: TanStack Query for server state, Zustand for client state
+- **Theming**: MUI-based theme system with dark/light mode toggle
+- **Mocking**: MSW + Faker.js for realistic development data
+- **Testing**: Jest + React Testing Library for unit and integration tests
+
+## Technology Stack
 
 ### Frontend
 ![React](https://img.shields.io/badge/React-18-%2361DAFB?style=for-the-badge&logo=react&logoColor=black)
@@ -43,175 +79,229 @@ Inspired by the requirements of government and enterprise data portals, this pro
 ![GitLab CI](https://img.shields.io/badge/GitLab_CI-%23FC6D26?style=for-the-badge&logo=gitlab&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
 
----
+## Prerequisites
 
-# Quick Start
+- Node.js 18 or higher
+- npm 9 or higher (or pnpm/yarn)
+- Git
+
+## Installation
 
 ```bash
-# Clone & install
-git clone <repo-url> && cd civis-dash/frontend
+# Clone the repository
+git clone <repository-url>
+cd civis-dash/frontend
+
+# Install dependencies
 npm install
 
-# Run dev server
+# Start development server
 npm run dev
 
-# Open browser → http://localhost:5173
+# Access the application at http://localhost:5173
 ```
-civis-dash
-├─ README.md
-└─ frontend
-   ├─ README.md
-   ├─ eslint.config.js
-   ├─ index.html
-   ├─ package-lock.json
-   ├─ package.json
-   ├─ public
-   │  ├─ favicon.svg
-   │  ├─ icons.svg
-   │  └─ mockServiceWorker.js
-   ├─ src
-   │  ├─ App.css
-   │  ├─ App.tsx
-   │  ├─ app
-   │  │  └─ theme.ts
-   │  ├─ assets
-   │  │  ├─ hero.png
-   │  │  ├─ react.svg
-   │  │  └─ vite.svg
-   │  ├─ components
-   │  │  └─ BlockNavigator
-   │  │     ├─ BlockNavigator.css
-   │  │     └─ lockNavigator.jsx
-   │  ├─ context
-   │  │  └─ ThemeContext.tsx
-   │  ├─ entities
-   │  │  └─ citizen
-   │  │     └─ types.ts
-   │  ├─ index.css
-   │  ├─ main.tsx
-   │  ├─ mocks
-   │  │  ├─ browser.ts
-   │  │  └─ handlers.ts
-   │  ├─ pages
-   │  │  ├─ dashboard
-   │  │  │  ├─ components
-   │  │  │  │  └─ StatsCard.tsx
-   │  │  │  ├─ hooks
-   │  │  │  │  └─ useDashStats.ts
-   │  │  │  └─ index.tsx
-   │  │  ├─ profile
-   │  │  │  ├─ hooks
-   │  │  │  │  └─ useCitizenById.ts
-   │  │  │  ├─ index.tsx
-   │  │  │  ├─ schemas
-   │  │  │  │  └─ profileSchema.ts
-   │  │  │  └─ store
-   │  │  │     └─ userStore.ts
-   │  │  └─ register
-   │  │     ├─ components
-   │  │     │  ├─ CitizenTable.tsx
-   │  │     │  └─ StatusStyle.tsx
-   │  │     ├─ hooks
-   │  │     │  └─ useCitizen.ts
-   │  │     └─ index.tsx
-   │  └─ utils
-   │     └─ statusStyle.ts
-   ├─ tsconfig.app.json
-   ├─ tsconfig.json
-   ├─ tsconfig.node.json
-   └─ vite.config.ts
+
+### Docker Setup
+
+```bash
+# Build and run with Docker
+docker build -t civis-dash .
+docker run -p 5173:5173 civis-dash
+```
+
+## Architecture
+
+### Design Principles
+
+1. **Feature-Sliced Design (FSD)**: Code is organized by business features rather than technical layers. Each feature is self-contained with its own components, hooks, schemas, and types.
+
+2. **Separation of Concerns**:
+   - `entities/`: Domain models and shared types
+   - `features/`: Business logic and UI for specific capabilities
+   - `pages/`: Route-level composition of features
+   - `shared/`: Reusable utilities and UI primitives
+
+3. **Type Safety**: Full TypeScript coverage with Zod for runtime validation. Types are inferred from schemas where possible to avoid duplication.
+
+4. **State Management Strategy**:
+   - Server state: TanStack Query (caching, background updates, error handling)
+   - Client state: Zustand (UI state, form drafts, theme preferences)
+   - Local state: React useState/useReducer (component-specific)
+
+### Data Flow
 
 ```
+API Request → TanStack Query → MSW (dev) / Real API (prod)
+                          ↓
+                    Normalized Cache
+                          ↓
+              Component via useQuery/useMutation
+                          ↓
+                    UI Rendering
+                          ↓
+              Form Submission → Zod Validation
+                          ↓
+              Success/Error Handling → Query Invalidation
 ```
-civis-dash
-├─ README.md
-└─ frontend
-   ├─ README.md
-   ├─ eslint.config.js
-   ├─ index.html
-   ├─ package-lock.json
-   ├─ package.json
-   ├─ public
-   │  ├─ favicon.svg
-   │  ├─ icons.svg
-   │  └─ mockServiceWorker.js
-   ├─ src
-   │  ├─ App.css
-   │  ├─ App.tsx
-   │  ├─ app
-   │  │  └─ theme.ts
-   │  ├─ assets
-   │  │  ├─ hero.png
-   │  │  ├─ react.svg
-   │  │  └─ vite.svg
-   │  ├─ components
-   │  │  └─ BlockNavigator
-   │  │     ├─ BlockNavigator.css
-   │  │     └─ lockNavigator.jsx
-   │  ├─ context
-   │  │  └─ ThemeContext.tsx
-   │  ├─ entities
-   │  │  └─ citizen
-   │  │     └─ types.ts
-   │  ├─ index.css
-   │  ├─ main.tsx
-   │  ├─ mocks
-   │  │  ├─ browser.ts
-   │  │  └─ handlers.ts
-   │  ├─ pages
-   │  │  ├─ dashboard
-   │  │  │  ├─ components
-   │  │  │  │  └─ StatsCard.tsx
-   │  │  │  ├─ hooks
-   │  │  │  │  └─ useDashStats.ts
-   │  │  │  └─ index.tsx
-   │  │  ├─ profile
-   │  │  │  ├─ components
-   │  │  │  │  ├─ ProfileActions.tsx
-   │  │  │  │  ├─ ProfileHeader.tsx
-   │  │  │  │  ├─ SectionWrapper.tsx
-   │  │  │  │  └─ sections
-   │  │  │  │     ├─ AddressesSection.tsx
-   │  │  │  │     ├─ AuditSection.tsx
-   │  │  │  │     ├─ BenefitsSection.tsx
-   │  │  │  │     ├─ ChildrenSection.tsx
-   │  │  │  │     ├─ ContactsSection.tsx
-   │  │  │  │     ├─ DocumentsSection.tsx
-   │  │  │  │     ├─ EducationSection.tsx
-   │  │  │  │     ├─ EmploymentSection.tsx
-   │  │  │  │     ├─ FamilySection.tsx
-   │  │  │  │     ├─ FinanceSection.tsx
-   │  │  │  │     ├─ HousingSection.tsx
-   │  │  │  │     ├─ LanguagesSection.tsx
-   │  │  │  │     ├─ LegalSection.tsx
-   │  │  │  │     ├─ MedicalSection.tsx
-   │  │  │  │     ├─ MigrationSection.tsx
-   │  │  │  │     ├─ MilitarySection.tsx
-   │  │  │  │     ├─ PersonalSection.tsx
-   │  │  │  │     ├─ PropertySection.tsx
-   │  │  │  │     ├─ SkillsSection.tsx
-   │  │  │  │     └─ SystemSection.tsx
-   │  │  │  ├─ config
-   │  │  │  │  └─ sectionsConfig.ts
-   │  │  │  ├─ hooks
-   │  │  │  │  └─ useCitizenById.ts
-   │  │  │  ├─ index.tsx
-   │  │  │  ├─ schemas
-   │  │  │  │  └─ profileSchema.ts
-   │  │  │  └─ store
-   │  │  │     └─ userStore.ts
-   │  │  └─ register
-   │  │     ├─ components
-   │  │     │  ├─ CitizenTable.tsx
-   │  │     │  └─ StatusStyle.tsx
-   │  │     ├─ hooks
-   │  │     │  └─ useCitizen.ts
-   │  │     └─ index.tsx
-   │  └─ utils
-   │     └─ statusStyle.ts
-   ├─ tsconfig.app.json
-   ├─ tsconfig.json
-   ├─ tsconfig.node.json
-   └─ vite.config.ts
+
+### Performance Optimizations
+
+- **Virtualization**: TanStack Virtual renders only visible rows for tables with 100k+ records
+- **Memoization**: React.memo and useMemo prevent unnecessary re-renders
+- **Code Splitting**: Route-based lazy loading with React.lazy
+- **Debouncing**: Search and filter inputs use debounced queries
+- **Pagination**: Server-side pagination with placeholderData for smooth transitions
+
+### Form Architecture
+
+Each profile section is a controlled component receiving `control` from React Hook Form via FormProvider. Validation schemas are composed using Zod's `.merge()` and `.refine()` methods.
 
 ```
+ProfilePage (FormProvider)
+├── PersonalSection (control)
+├── ContactsSection (control)
+├── AddressesSection (control)
+└── ... 17 more sections
+```
+
+## Available Scripts
+
+```bash
+# Development
+npm run dev           # Start Vite dev server
+npm run build         # Production build
+npm run preview       # Preview production build locally
+
+# Testing
+npm test              # Run Jest tests in watch mode
+npm run test:run      # Run tests once
+npm run test:coverage # Generate coverage report
+
+# Quality
+npm run lint          # ESLint check
+npm run lint:fix      # Auto-fix linting issues
+npm run format        # Prettier format
+npm run typecheck     # TypeScript type checking
+
+# Mocking
+npm run mock:start    # Start MSW worker (handled automatically in dev)
+```
+
+## Testing
+
+### Test Structure
+
+Tests are colocated with source files using `.test.tsx` suffix:
+
+```
+src/
+├── features/citizen/
+│   ├── components/ProfileHeader.tsx
+│   ├── components/ProfileHeader.test.tsx
+│   ├── schemas/profileSchema.ts
+│   └── schemas/profileSchema.test.ts
+```
+
+### Running Tests
+
+```bash
+# Watch mode (re-runs on file changes)
+npm test
+
+# Single run with coverage
+npm run test:coverage
+
+# Run specific test file
+npx jest src/features/citizen/schemas/profileSchema.test.ts
+```
+
+### Test Coverage Targets
+
+- Statements: 70%
+- Branches: 70%
+- Functions: 70%
+- Lines: 70%
+
+Coverage report is generated in `coverage/` directory after running `npm run test:coverage`.
+
+## Environment Variables
+
+Create `.env` file based on `.env.example`:
+
+```env
+# API Configuration
+VITE_API_URL=http://localhost:3000/api
+VITE_API_TIMEOUT=30000
+
+# Feature Flags
+VITE_ENABLE_MOCKS=true
+VITE_ENABLE_ANALYTICS=false
+
+# Build
+VITE_APP_VERSION=1.0.0
+```
+
+Variables prefixed with `VITE_` are exposed to the client bundle.
+
+## Performance Considerations
+
+### Large Dataset Handling
+
+For 100,000+ citizen records:
+
+1. **Server-Side Pagination**: Always request paginated data (`?page=1&limit=50`)
+2. **Virtual Scrolling**: Only render visible rows using TanStack Virtual
+3. **Debounced Filters**: Apply search/filter changes after 300ms delay
+4. **Memoized Selectors**: Use reselect or Zustand selectors to prevent re-renders
+
+### Form Performance
+
+For forms with 150+ fields:
+
+1. **Field-Level Memoization**: Each section is memoized to prevent full-form re-renders
+2. **Lazy Validation**: Validate on blur or submit, not on every keystroke
+3. **Draft Persistence**: Save form state to localStorage/IndexedDB for recovery
+
+### Bundle Optimization
+
+- Code splitting by route
+- Tree-shaking of unused MUI components
+- Compression with Brotli/Gzip in production
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Commit changes: `git commit -m 'feat: add your feature'`
+4. Push to branch: `git push origin feature/your-feature`
+5. Open a Pull Request
+
+### Commit Convention
+
+- `feat:` New feature
+- `fix:` Bug fix
+- `docs:` Documentation changes
+- `style:` Formatting, no logic changes
+- `refactor:` Code restructuring
+- `test:` Adding or updating tests
+- `chore:` Maintenance tasks
+
+### Code Review Checklist
+
+- [ ] TypeScript types are strict and complete
+- [ ] Components are memoized where appropriate
+- [ ] Tests cover happy path and edge cases
+- [ ] Accessibility attributes are included
+- [ ] Responsive behavior is verified
+- [ ] No console.log statements in production code
+
+## Browser Support
+
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
+
+## License
+
+MIT License. See LICENSE file for details.

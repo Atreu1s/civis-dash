@@ -155,9 +155,8 @@ export default function ProfilePage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
-  const onSubmit: SubmitHandler<ProfileFormData> = async (data) => {
+  const onSubmit: SubmitHandler<ProfileFormData> = async () => {
     clearDraft();
-    console.log('✅ Данные сохранены:', data);
     navigate('/registry');
   };
 

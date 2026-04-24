@@ -4,7 +4,12 @@ import App from './App';
 import './index.css'; 
 
 async function enableMocking() {
-  if (import.meta.env.MODE !== 'development') return;
+  // if (import.meta.env.MODE !== 'development') return;
+
+  if (import.meta.env.MODE !== 'test') {
+    const { worker } = await import('./mocks/browser');
+    await worker.start({ onUnhandledRequest: 'bypass' });
+  }
 
   const { worker } = await import('./mocks/browser');
   

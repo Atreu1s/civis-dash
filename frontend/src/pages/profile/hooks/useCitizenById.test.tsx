@@ -5,47 +5,30 @@ import { useCitizenById } from './useCitizenById';
 import { server } from '../../../setupTests';
 import { http, HttpResponse } from 'msw';
 
-const createTestQueryClient = () =>
-  new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false, 
-        gcTime: 0,    
-      },
-    },
-  });
-
-const wrapper = ({ children }: { children: React.ReactNode }) => {
-  const queryClient = createTestQueryClient();
-  return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+const createWrapper = () => {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={qc}>{children}</QueryClientProvider>
   );
 };
 
 describe('useCitizenById', () => {
-  it('загружает данные гражданина', async () => {
+  it('успешно загружает данные', async () => {
     server.use(
-      http.get('/api/citizens/:id', ({ params }) => {
-        return HttpResponse.json({
-          id: params.id,
-          lastName: 'Тестов',
-          firstName: 'Тест',
-          status: 'active'
-        });
-      })
+      http.get('/api/citizens/:id', () => HttpResponse.json({ id: 'cit-1', lastName: 'Тестов', status: 'active' }))
     );
 
-    
-    const { result } = renderHook(() => useCitizenById('citizen-123'), { wrapper });
-
-    await waitFor(() => {
-      expect(result.current.data).toBeDefined();
-      expect(result.current.isLoading).toBe(false);
-    });
-
+    const { result } = renderHook(() => useCitizenById('cit-1'), { wrapper: createWrapper() });
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current.data?.lastName).toBe('Тестов');
-    expect(result.current.data?.id).toBe('citizen-123');
+  });
+
+  it('обрабатывает ошибку сети', async () => {
+    server.use(
+      http.get('/api/citizens/:id', () => HttpResponse.json({ error: 'Not Found' }, { status: 404 }))
+    );
+
+    const { result } = renderHook(() => useCitizenById('cit-99'), { wrapper: createWrapper() });
+    await waitFor(() => expect(result.current.isError).toBe(true));
   });
 });

@@ -10,12 +10,12 @@ export default defineConfig({
     },
   },
   test: {
-    globals: true, // Описывает describe, it, expect, vi глобально
+    globals: true, 
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.ts'],
     include: ['src/**/*.{test,spec}.{js,ts,jsx,tsx}'],
     coverage: {
-      provider: 'v8', // Быстрый и точный сборщик покрытия
+      provider: 'v8', 
       reporter: ['text', 'json-summary'],
       thresholds: { lines: 70, branches: 70, functions: 70, statements: 70 },
     },
